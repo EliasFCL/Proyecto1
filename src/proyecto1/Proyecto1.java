@@ -5,6 +5,7 @@
 package proyecto1;
 
 import java.io.*;
+import java.util.*;
 
 public class Proyecto1 {
   public static void main(String[] args) {
@@ -20,7 +21,7 @@ public class Proyecto1 {
     String archivoErrores = nombreArchivo + "-errores.err";
 
     try (
-      BufferedReader entrada = new BufferedReader(new FileReader(entradaCMD)); //Leer el archivo indicado en el cmd
+      BufferedReader entrada = new BufferedReader(new FileReader(entradaCMD));//Leer el archivo indicado en el cmd
       PrintWriter salida = new PrintWriter(new FileWriter(archivoErrores)) //Crear el archivo de errores
     ) {
       //Variables de control
@@ -29,27 +30,26 @@ public class Proyecto1 {
       boolean programOriginal = false;
       boolean esperandoUses = false;
       boolean constCorrecto = false;
+      boolean constEncontrado = false;
       boolean despuesVar = false;
       boolean endEncontrado = false;
       boolean beginEncontrado = false;
 
       //Mientras hallan líneas para leer
       while ((linea = entrada.readLine()) != null) {
-        String lineaTrim = linea.trim().toLowerCase(); //Eliminar espacios sobrantes y convertir a minúscula 
-        salida.printf("%04d %s%n", numeroLinea, linea); //Imprimir las líneas junto con su número
+        String lineaTrim = linea.trim().toLowerCase();//Eliminar espacios sobrantes y convertir a minúscula 
+        salida.printf("%04d %s%n", numeroLinea, linea);//Imprimir las líneas junto con su número
 
         if (!programOriginal) {
 
           //Verificar que no haya contenido antes de program
           if (lineaTrim.startsWith("//") || lineaTrim.startsWith("{") || linea.isEmpty()) {
             salida.printf("Error 204. Línea %04d. No pueden haber líneas, espacios o comentarios antes de 'program'%n", numeroLinea);
-            break;
           }
 
           //Verificar que el archivo .pas inicie con program
           if (!lineaTrim.startsWith("program")) {
             salida.printf("Error 204. Línea %04d. Debe comenzar con 'program'%n", numeroLinea);
-            break;
           }
 
           //Comprobar que termine en punto y coma
@@ -75,7 +75,6 @@ public class Proyecto1 {
           //Verificar que exista uses despues de program
           if (!lineaTrim.startsWith("uses")) {
             salida.printf("Error 206. Línea %04d. Debe aparecer 'uses' después de 'program'%n", numeroLinea);
-            break;
           }
 
           if (!lineaTrim.endsWith(";")) {
@@ -98,14 +97,14 @@ public class Proyecto1 {
 
         //validar los const
         if (lineaTrim.startsWith("uses")) {
-          constCorrecto = true; //Se permiten const
+          constCorrecto = true;//Se permiten const
         }
 
         if (lineaTrim.startsWith("var")) {
-          constCorrecto = false; //ya no se permiten const
+          constCorrecto = false;//ya no se permiten const
         }
         if (lineaTrim.startsWith("const")) {
-            
+
           if (!constCorrecto) {
             salida.printf("Error 210. Línea %04d. 'const' debe estar entre uses y var%n", numeroLinea);
           }
@@ -115,7 +114,79 @@ public class Proyecto1 {
           if (!lineaTrim.endsWith(";")) {
             salida.printf("Error 210. Línea %04d. 'const' debe contener un ';' al final%n", numeroLinea);
           }
+          constEncontrado = true;
         }
+        //Validaciones del var
+        if (lineaTrim.startsWith("var")) {
+          //Verificar si 'var' aparece después de 'uses' y antes de 'begin'
+          if (esperandoUses || beginEncontrado || !constEncontrado) {
+            salida.printf("Error 211. Línea %04d. 'var' debe aparecer después de 'const' y antes de 'begin'%n", numeroLinea);
+          }
+          //Lista de palabras reservadas de Pascal
+          Set < String > reservadas = new HashSet < > (Arrays.asList(
+            "ABSOLUTE", "DOWNTO", "BEGIN", "DESTRUCTOR", "MOD", "AND", "ELSE", "CASE", "EXTERNAL", "NOT",
+            "ARRAY", "END", "CONST", "DIV", "PACKED", "ASM", "FILE", "CONSTRUCTOR", "DO", "PROCEDURE", "FOR",
+            "FORWARD", "FUNCTION", "GOTO", "RECORD", "IF", "IN", "OR", "PRIVATE", "UNTIL", "PROGRAM", "REPEAT",
+            "STRING", "THEN", "VAR", "WHILE", "XOR", "WITH", "TYPE", "OF", "USES", "SET", "OBJECT", "TO"
+          ));
+          //Quitar "var" y los espacios al principio
+          String declaracion = lineaTrim.substring(3).trim();
+
+          //Separar las variables por coma
+          String[] partes = declaracion.split(",");
+
+          //Procesar cada variable
+          for (String parte: partes) {
+            parte = parte.trim();
+            //Tomar el identificador antes del ':'
+            String identificador = parte.split(":")[0].trim();
+
+            if (reservadas.contains(identificador.toUpperCase())) {
+              salida.printf("Error 226. Línea %04d. Se esta utilizando una palabra reservada para declarar un identificador%n", numeroLinea);
+            }
+            //Buscar los dos puntos en la línea
+            if (lineaTrim.contains(":")) {
+              String espacio = lineaTrim.substring(lineaTrim.indexOf(":") + 1);
+
+              //Revisar si empieza con espacio
+              if (!espacio.startsWith(" ")) {
+                salida.printf("Error. Línea %04d. Debe haber un espacio después de los dos puntos en la declaración de la variable.%n", numeroLinea);
+              }
+            }
+            //Verificar que el nombre de la variable empiece con una letra
+            if (!Character.isLetter(identificador.charAt(0))) {
+              salida.printf("Error. Línea %04d. El nombre de la variable '%s' debe comenzar con una letra.%n", numeroLinea, identificador);
+            } else
+
+              //Verificar que el identificador contenga solo letras y guiones bajos, junto con el punto y coma
+              if (!identificador.matches("^[a-zA-Z][a-zA-Z_]*$")) {
+                salida.printf("Error. Línea %04d. El identificador '%s' es inválido. Usar solo letras y guiones bajos.%n", numeroLinea, identificador);
+              }
+
+            String despuesDosPuntos = lineaTrim.substring(lineaTrim.indexOf(":") + 1).trim();
+
+            //Quitar el punto y coma final
+            if (despuesDosPuntos.endsWith(";")) {
+              despuesDosPuntos = despuesDosPuntos.substring(0, despuesDosPuntos.length() - 1).trim();
+            }
+
+            //Si hay "of", quedarse con lo último
+            if (despuesDosPuntos.toLowerCase().contains("of")) {
+              despuesDosPuntos = despuesDosPuntos.substring(despuesDosPuntos.toLowerCase().lastIndexOf("of") + 2).trim();
+            }
+
+            //Validar que sea uno de los tipos permitidos
+            if (!(despuesDosPuntos.equalsIgnoreCase("integer") ||
+                despuesDosPuntos.equalsIgnoreCase("string") ||
+                despuesDosPuntos.equalsIgnoreCase("word"))) {
+              salida.printf("Error. Línea %04d. Tipo de variable inválido: %s%n", numeroLinea, despuesDosPuntos);
+            } else if (!lineaTrim.endsWith(";")) {
+              salida.printf("Error. Línea %04d. La declaracion del var debe terminar con punto y coma.%n", numeroLinea, despuesDosPuntos);
+            }
+            
+          }
+        }
+
         //Validaciones del begin
         if (lineaTrim.startsWith("var")) {
           despuesVar = true; //Marcar que ya se encontraron declaraciones var
@@ -132,12 +203,14 @@ public class Proyecto1 {
             salida.printf("Error 212. Línea %04d. 'begin' debe estar solo en su línea, sin otras palabras ni comentarios%n", numeroLinea);
           }
           beginEncontrado = true;
+          
         }
+
         //Validaciones del end
         if (linea.startsWith("end")) {
           if (lineaTrim.equals("end.")) {
-            
-            endEncontrado = true;//Es el final correcto
+
+            endEncontrado = true; //Es el final correcto
 
             // Verificar que no tenga comentarios
             if (linea.contains("//") || linea.contains("{")) {
@@ -155,6 +228,7 @@ public class Proyecto1 {
 
         //Validaciones de los write
         if (lineaTrim.startsWith("write")) {
+            
           if (beginEncontrado) {
             //No hacer nada
           } else {
@@ -187,14 +261,35 @@ public class Proyecto1 {
 
               //Comprobar que las comillas si se cierran
               if (dentroComilla && !errorCadena) {
-                salida.printf("Error 220. Línea %04d. falta cerrar comilla en la cadena del paréntesis%n", numeroLinea);
+                salida.printf("Error 221. Línea %04d. falta cerrar comilla en la cadena del paréntesis%n", numeroLinea);
               }
             }
           }
-          if(!lineaTrim.endsWith(";")){
-              salida.printf("Error 221. Línea %04d. falta el punto y coma del write%n", numeroLinea);
+          if (!lineaTrim.endsWith(";")) {
+
+            salida.printf("Error 222. Línea %04d. falta el punto y coma del write%n", numeroLinea);
           }
         }
+
+        //Validaciones de comentarios
+        if (lineaTrim.startsWith("/")) {
+          if (!lineaTrim.startsWith("//")) {
+            salida.printf("Error 223. Línea %04d. Para iniciar un comentario debe usar '//'%n", numeroLinea);
+          }
+        }
+        if (lineaTrim.startsWith("{")) {
+          if (!lineaTrim.endsWith("}")) {
+            salida.printf("Error 224. Línea %04d. Falta el segundo corchete, no usar comentarios de doble línea %n", numeroLinea);
+          }
+        } else if (lineaTrim.startsWith("}")) {
+          salida.printf("Error 225. Línea %04d. Ese corchete es invalido debe empezar con '{'%n", numeroLinea);
+        }
+        if (lineaTrim.contains(";")) {
+          if (lineaTrim.contains("//") || lineaTrim.contains("{")) {
+            salida.printf("Error 225. Línea %04d. No pueden haber comentarios despues de un ';'%n", numeroLinea);
+          }
+        }
+
         numeroLinea++; //Aumentar el número de líneas
       }
 

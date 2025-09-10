@@ -1,3 +1,4 @@
+//hasta
 program calendario;
 uses crt, dos;
 
@@ -104,3 +105,4 @@ begin
     until tecla = 27;
     //fin del programa
 end. 
+{Hasta}
