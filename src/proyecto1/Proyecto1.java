@@ -288,6 +288,9 @@ public class Proyecto1 {
           if (lineaTrim.contains("//") || lineaTrim.contains("{")) {
             salida.printf("Error 225. Línea %04d. No pueden haber comentarios despues de un ';'%n", numeroLinea);
           }
+          if (lineaTrim.contains("/")){
+              salida.printf("Error 225.5. Línea %04d. '/' no esta permitido para comentarios luego de un punto y coma%n", numeroLinea);
+          }
         }
 
         numeroLinea++; //Aumentar el número de líneas
