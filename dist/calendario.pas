@@ -40,7 +40,7 @@ begin
             writeln (#201, borde, #203, borde, #203, borde, #203, borde, #203, borde, #203, borde, #203, borde, #187);
             write   (#186' Domingo '#186'  Lunes  '#186' Martes  '#186'Mi'#130'rcoles'#186' Jueves  '#186' Viernes ');
             writeln (#186' S'#160'bado  '#186);
-            writeln (#204, borde, #206, borde, #206, borde, #206, borde, #206, borde, #206, borde, #206, borde, #185);
+            writeln (#204, borde, #206, borde, #205, borde, #206, borde, #206, borde, #206, borde, #206, borde, #185);
             while dia <= meses[mes] do
                 begin
                     for i:=0 to 6 do
