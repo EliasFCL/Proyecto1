@@ -165,10 +165,7 @@ public class Proyecto1 {
         }
         //Validaciones del var
         if (lineaTrim.startsWith("var")) {
-          String nombreVar = lineaTrim.substring(4).trim();
-          if(nombreVar.isEmpty()){
-              salida.printf("Error. Línea %04d. el indicador no tiene nombre %n", numeroLinea);
-          }
+
           //Verificar si 'var' aparece después de 'uses' y antes de 'begin'
           if (esperandoUses || beginEncontrado || !constEncontrado) {
             salida.printf("Error 211. Línea %04d. 'var' debe aparecer después de 'const' y antes de 'begin'%n", numeroLinea);
@@ -185,13 +182,20 @@ public class Proyecto1 {
 
           //Separar las variables por coma
           String[] partes = declaracion.split(",");
-
+          
           //Procesar cada variable
+          try{
           for (String parte: partes) {
             parte = parte.trim();
+            
             //Tomar el identificador antes del ':'
             String identificador = parte.split(":")[0].trim();
-            identificadores.add(identificador); //Añadir los identificadores encontrados
+            identificadores.add(identificador);//Añadir los identificadores encontrados
+            //Verificar que exista un identificador luego del var y despues de una coma si la hay
+            if(identificador.isEmpty()){
+                salida.printf("Error 3333. Línea %04d. Debe existir un nombre de variable.%n", numeroLinea);
+            }
+
             if (reservadas.contains(identificador.toUpperCase())) {
               salida.printf("Error 226. Línea %04d. Se esta utilizando una palabra reservada para declarar un identificador%n", numeroLinea);
             }
@@ -234,7 +238,9 @@ public class Proyecto1 {
             } else if (!lineaTrim.endsWith(";")) {
               salida.printf("Error. Línea %04d. La declaracion del var debe terminar con punto y coma.%n", numeroLinea, despuesDosPuntos);
             }
-
+          }
+          }catch(Exception e){
+              salida.printf("Error inesperado en validación de 'var' en la línea %04d: %s%n", numeroLinea, e.getMessage());
           }
         }
 
@@ -292,9 +298,17 @@ public class Proyecto1 {
             //Validar que los corchetes tengan contenido
             int inicial = ladoIzq.indexOf("[");
             int fin = ladoIzq.indexOf("]");
+            int iniDer = ladoDer.indexOf("[");
+            int finDer = ladoDer.indexOf("]");
+
             if (inicial != -1 && fin != -1) {
               if (fin <= inicial + 1) {
-                salida.printf("Error 236. Línea %04d. Los corchetes están vacíos%n", numeroLinea);
+                salida.printf("Error 236. Línea %04d. Los corchetes del lado izquierdo están vacíos%n", numeroLinea);
+              }
+            }
+            if (iniDer != -1 && finDer != -1) {
+              if (finDer <= iniDer + 1) {
+                salida.printf("Error 237. Línea %04d. Los corchetes del lado derecho están vacíos%n", numeroLinea);
               }
             }
             if (!identificadores.contains(idIzq) && !constantes.contains(idIzq)) {

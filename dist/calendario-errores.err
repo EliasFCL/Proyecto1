@@ -95,14 +95,11 @@ Error 210. Línea 0008. 'const' debe contener un ';' al final
 0094                             else
 0095                                 begin
 0096                                     dec (year);
-0097                                     me := 11;
-Error 233. Línea 0097. La variable 'me' no está declarada
+0097                                     mes := 11;
 0098                                 end;
 0099                end;
 0100           end;	
 0101         end;
 0102     until tecla = 27;
 0103     //fin del programa
-0104 end.
-0105 //as 
-Error 215. Línea 0105. No puede haber líneas después de 'end.'
+0104 end. 
