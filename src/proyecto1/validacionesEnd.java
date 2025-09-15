@@ -12,7 +12,7 @@ public class validacionesEnd {
       if (lineaTrim.startsWith("end")) {
         if (lineaTrim.equals("end.")) {
 
-          endEncontrado = true; //Es el End correcto
+          endEncontrado = true;//Es el End final
 
           //Verificar que no tenga comentarios
           if (linea.contains("//") || linea.contains("{")) {
@@ -29,7 +29,6 @@ public class validacionesEnd {
           endEncontrado = true;
         }
       } else if (endEncontrado) {
-        //Verificar que después del end. no haya nada
         salida.printf("Error 215. Línea %04d. No puede haber líneas después de 'end.'%n", numeroLinea);
       }
     } catch (Exception e) {

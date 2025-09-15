@@ -1,4 +1,5 @@
 package proyecto1;
+
 import java.io.*;
 /**
  *
@@ -18,7 +19,7 @@ public class validacionesIniciales {
 
         //Verificar que el archivo .pas inicie con program
         if (!lineaTrim.startsWith("program")) {
-          salida.printf("Error 204. Línea %04d. Debe comenzar con 'program'%n", numeroLinea);
+          salida.printf("Error 204. Línea %04d. El código debe comenzar con 'program'%n", numeroLinea);
         }
 
         //Comprobar que termine en punto y coma
@@ -38,16 +39,12 @@ public class validacionesIniciales {
     }
   }
 
-  public static void validarUses(
-    String lineaTrim,
-    int numeroLinea,
-    PrintWriter salida,
-    boolean esperandoUses
+  public static void validarUses(String lineaTrim, int numeroLinea, PrintWriter salida, boolean esperandoUses
   ) {
     if (esperandoUses) {
       try {
         if (lineaTrim.isEmpty() || lineaTrim.startsWith("//") || lineaTrim.startsWith("{")) {
-          salida.printf("Error 205. Línea %04d. No puede haber nada entre(incluyendo espacios vacios) 'program' y 'uses'%n", numeroLinea);
+          salida.printf("Error 205. Línea %04d. No puede haber nada(incluyendo espacios vacios) entre 'program' y 'uses'%n", numeroLinea);
           return;
         }
 
@@ -62,7 +59,7 @@ public class validacionesIniciales {
           //Verificar que exista un comando
           String comando = lineaTrim.substring(4, lineaTrim.length() - 1).trim();
           if (comando.isEmpty()) {
-            salida.printf("Error 299. Línea %04d. uses debe contener un comando%n", numeroLinea);
+            salida.printf("Error 299. Línea %04d. Debe existir un comando después de uses%n", numeroLinea);
           } else {
             //Separar por comas
             String[] comandoComa = comando.split(",");

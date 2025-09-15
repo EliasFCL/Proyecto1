@@ -10,18 +10,19 @@ import java.util.*;
 
 public class variableExiste {
 
-  public static void validarFor(String lineaTrim, String linea, int numeroLinea,
-    Set < String > identificadores, Set < String > constantes,
+  public static void validarFor(String lineaTrim, String linea, int numeroLinea, Set < String > identificadores, Set < String > constantes,
     PrintWriter salida) {
     
     //Validacion del for y :=
     if (lineaTrim.startsWith("for") || lineaTrim.contains(":=")) {
+        //Validacion del for
       if (lineaTrim.startsWith("for")) {
         String[] tokens = lineaTrim.split("\\s+"); //Separar por espacios
+        //Comprobar que después del for exista un identificador 
         if (tokens.length < 2) {
-          salida.printf("Error 233. Línea %04d. Despues del for debe haber un identificador%n", numeroLinea);
+          salida.printf("Error 233. Línea %04d. Después del for debe haber un identificador%n", numeroLinea);
         } else {
-          String varFor = tokens[1]; //La variable que sigue a 'for'
+          String varFor = tokens[1];//La variable que sigue a 'for'
           //Extraer lo que esta antes del ":"
           if (varFor.contains(":")) {
             varFor = varFor.substring(0, varFor.indexOf(":"));
@@ -35,23 +36,22 @@ public class variableExiste {
               break; //Variable encontrada
             }
           }
-
           if (!encontrado) {
             salida.printf("Error 233. Línea %04d. La variable '%s' no está declarada%n", numeroLinea, varFor);
           }
         }
       } else if (lineaTrim.contains(":=")) {
         String[] lados = lineaTrim.split(":=", 2);
-        String ladoIzq = lados[0].trim();
-        String ladoDer = lados[1].trim();
+        String ladoIzq = lados[0].trim();//Todo lo que esta antes del :=
+        String ladoDer = lados[1].trim();//Todo lo que esta despues del :=
 
         //Extraer corchete del lado izquierdo
         String idIzq = ladoIzq.replaceAll("\\[.*?\\]", "").replace(";", "").trim();
         //Validar que los corchetes tengan contenido
-        int inicial = ladoIzq.indexOf("[");
-        int fin = ladoIzq.indexOf("]");
-        int iniDer = ladoDer.indexOf("[");
-        int finDer = ladoDer.indexOf("]");
+        int inicial = ladoIzq.indexOf("[");//Corchete de la izquierda
+        int fin = ladoIzq.indexOf("]");//Corchete de la izquierda
+        int iniDer = ladoDer.indexOf("[");//Corchete de la derecha
+        int finDer = ladoDer.indexOf("]");//Corchete de la derecha
 
         if (inicial != -1 && fin != -1) {
           if (fin <= inicial + 1) {
@@ -71,7 +71,7 @@ public class variableExiste {
         Set < String > palabrasIgnorar = new HashSet < > (Arrays.asList(
           "and", "or", "not", "mod", "div", "then", "else", "do", "ord", "readkey","for"
         ));
-        //Validar que los corchetes sean correctos
+        //Validar que el contenido de los corchetes este correcto y que estos existan
         if (inicial != -1 && fin != -1 && fin > inicial + 1) {
           String dentro = ladoIzq.substring(inicial + 1, fin).trim();
           String[] tokensCorchetes = dentro.split("[()=<>!+\\-*/\\s]+");
@@ -110,144 +110,143 @@ public class variableExiste {
   }
   
   //Validacion de getdate, dec e inc
-   public static void validarGetDate(String lineaTrim, String linea, int numeroLinea,
-                                            Set<String> identificadores, PrintWriter salida) {
+  public static void validarGetDate(String lineaTrim, String linea, int numeroLinea, Set < String > identificadores,
+    PrintWriter salida) {
 
-        if (lineaTrim.contains("dec") || lineaTrim.contains("getdate") || lineaTrim.contains("inc")) {
-            int inicial = linea.indexOf("(");
-            int fin = linea.lastIndexOf(")");
+    if (lineaTrim.contains("dec") || lineaTrim.contains("getdate") || lineaTrim.contains("inc")) {
+      int inicial = linea.indexOf("(");
+      int fin = linea.lastIndexOf(")");
 
-            if (inicial == -1 || fin == -1 || fin < inicial) {
-                salida.printf("Error. Línea %04d. Se debe tener el paréntesis con una variable%n", numeroLinea);
-            } else {
-                String contenido = linea.substring(inicial + 1, fin).trim();
-                String[] parametros = contenido.split(",");
-
-                for (String parametro : parametros) {
-                    String variable = parametro.trim();
-                    boolean encontrado = false;
-
-                    for (String id : identificadores) {
-                        if (id.equalsIgnoreCase(variable)) {
-                            encontrado = true;
-                            break;
-                        }
-                    }
-
-                    if (!encontrado) {
-                        salida.printf("Error 233. Línea %04d. La variable '%s' no está declarada%n", numeroLinea, variable);
-                    }
-                }
+      if (inicial == -1 || fin == -1 || fin < inicial) {
+        salida.printf("Error. Línea %04d. Se debe tener el paréntesis con una variable%n", numeroLinea);
+      } else {
+        String contenido = linea.substring(inicial + 1, fin).trim();
+        String[] parametros = contenido.split(",");
+        //Recorrer parametros entre los parentésis
+        for (String parametro: parametros) {
+          String variable = parametro.trim();
+          boolean encontrado = false;
+          //Verificar que los identificadores existan
+          for (String id: identificadores) {
+            if (id.equalsIgnoreCase(variable)) {
+              encontrado = true;
+              break;
             }
+          }
+
+          if (!encontrado) {
+            salida.printf("Error 233. Línea %04d. La variable '%s' no está declarada%n", numeroLinea, variable);
+          }
         }
+      }
     }
-   
-   //Validacion del if
-   public static void validarIf(String lineaTrim, int numeroLinea,
-                                 Set<String> identificadores, PrintWriter salida) {
+  }
 
-        if (lineaTrim.startsWith("if")) {
-            String condicion = lineaTrim.substring(2).trim();
+  //Validacion del if
+  public static void validarIf(String lineaTrim, int numeroLinea, Set < String > identificadores, PrintWriter salida) {
 
-            //Lista con palabras reservadas que no se validan como variables
-            Set<String> palabrasIgnorar = new HashSet<>(Arrays.asList(
-                    "and", "or", "not", "mod", "div", "then", "else"
-            ));
+    if (lineaTrim.startsWith("if")) {
+      String condicion = lineaTrim.substring(2).trim();
 
-            //Separar la condición por operadores y paréntesis
-            String[] tokens = condicion.split("[()=<>!+\\-*/\\s]+");
+      //Lista con palabras reservadas
+      Set < String > palabrasIgnorar = new HashSet < > (Arrays.asList(
+        "and", "or", "not", "mod", "div", "then", "else"
+      ));
 
-            for (String token : tokens) {
-                String variable = token.trim();
-                if (variable.isEmpty()) continue;
+      //Separar la condición por operadores y paréntesis
+      String[] tokens = condicion.split("[()=<>!+\\-*/\\s]+");
+      //Validar que las variables usadas existan
+      for (String token: tokens) {
+        //Contenido a ignorar
+        String variable = token.trim();
+        if (variable.isEmpty()) continue;
+        if (palabrasIgnorar.contains(variable.toLowerCase())) continue;
+        if (variable.matches("\\d+")) continue; //Ignorar números
 
-                if (palabrasIgnorar.contains(variable.toLowerCase())) continue;
-                if (variable.matches("\\d+")) continue; //Ignorar números
+        //Obtener la variable dentro de los corchetes
+        List < String > contenidoCorchetes = new ArrayList < > ();
+        if (variable.contains("[")) {
+          int Inicio = variable.indexOf("[");
+          int Fin = variable.indexOf("]");
+          if (Fin > Inicio) {
+            String dentro = variable.substring(Inicio + 1, Fin).trim();
+            contenidoCorchetes.add(dentro);
+          }
+          variable = variable.substring(0, Inicio).trim();
+        }
 
-                List<String> contenidoCorchetes = new ArrayList<>();
+        boolean encontrado = false;
+        //Comprobar que la variable exista
+        for (String id: identificadores) {
+          if (id.equalsIgnoreCase(variable)) {
+            encontrado = true;
+            break;
+          }
+        }
 
-                if (variable.contains("[")) {
-                    int idxInicio = variable.indexOf("[");
-                    int idxFin = variable.indexOf("]");
-                    if (idxFin > idxInicio) {
-                        String dentro = variable.substring(idxInicio + 1, idxFin).trim();
-                        contenidoCorchetes.add(dentro);
-                    }
-                    variable = variable.substring(0, idxInicio).trim();
-                }
-
-                boolean encontrado = false;
-                for (String id : identificadores) {
-                    if (id.equalsIgnoreCase(variable)) {
-                        encontrado = true;
-                        break;
-                    }
-                }
-
-                if (!encontrado) {
-                    salida.printf("Error 233. Línea %04d. La variable '%s' no está declarada%n",
-                            numeroLinea, variable);
-                }
-
-                for (String contenido : contenidoCorchetes) {
-                    boolean dentroValido = false;
-                    for (String id : identificadores) {
-                        if (id.equalsIgnoreCase(contenido)) {
-                            dentroValido = true;
-                            break;
-                        }
-                    }
-                    if (!dentroValido) {
-                        salida.printf("Error 233. Línea %04d. La variable '%s' dentro de corchetes no está declarada%n",
-                                numeroLinea, contenido);
-                    }
-                }
+        if (!encontrado) {
+          salida.printf("Error 233. Línea %04d. La variable '%s' no está declarada%n",
+            numeroLinea, variable);
+        }
+        //Validar las variables dentro de los corchetes
+        for (String contenido: contenidoCorchetes) {
+          boolean dentroValido = false;
+          //Comprobar que el identificador exista
+          for (String id: identificadores) {
+            if (id.equalsIgnoreCase(contenido)) {
+              dentroValido = true;
+              break;
             }
+          }
+          if (!dentroValido) {
+            salida.printf("Error 233. Línea %04d. La variable '%s' dentro de corchetes no está declarada%n",
+              numeroLinea, contenido);
+          }
         }
+      }
     }
-   //Validaciones del until y while
-       public static void validarWhileUntil(String lineaTrim, int numeroLinea,
-                                         Set<String> identificadores, PrintWriter salida) {
+  }
+  //Validaciones del until y while
+  public static void validarUntilWhile(String lineaTrim, int numeroLinea, Set < String > identificadores,
+    PrintWriter salida) {
 
-        if (lineaTrim.startsWith("while") || lineaTrim.startsWith("until")) {
-            // Cortar la palabra clave ("while"/"until") y obtener la condición
-            String condicion = lineaTrim.substring(5).trim();
+    if (lineaTrim.startsWith("while") || lineaTrim.startsWith("until")) {
+      //Cortar la palabra ("while"/"until") y obtener la condición
+      String condicion = lineaTrim.substring(5).trim();
 
-            // Lista de palabras reservadas que no deben validarse
-            Set<String> palabrasIgnorar = new HashSet<>(Arrays.asList(
-                    "and", "or", "not", "mod", "div", "then", "else", "do"
-            ));
+      //Lista de palabras reservadas
+      Set < String > palabrasIgnorar = new HashSet < > (Arrays.asList(
+        "and", "or", "not", "mod", "div", "then", "else", "do"
+      ));
 
-            // Separar la condición por operadores, espacios o paréntesis
-            String[] tokens = condicion.split("[()=<>!+\\-*/\\s]+");
-
-            for (String token : tokens) {
-                token = token.trim();
-                if (token.isEmpty()
-                        || palabrasIgnorar.contains(token.toLowerCase())
-                        || token.matches("\\d+|\\d+;|;")) {
-                    continue; // ignorar
-                }
-
-                // Tomar la parte antes del corchete
-                String antes = token.contains("[")
-                        ? token.substring(0, token.indexOf("[")).trim()
-                        : token;
-
-                if (!identificadores.contains(antes)) {
-                    salida.printf("Error 233. Línea %04d. La variable '%s' no está declarada%n",
-                            numeroLinea, antes);
-                }
-
-                // Validar contenido dentro de corchetes
-                if (token.contains("[") && token.contains("]")) {
-                    String dentro = token.substring(token.indexOf("[") + 1, token.indexOf("]")).trim();
-                    if (!identificadores.contains(dentro)) {
-                        salida.printf("Error 233. Línea %04d. La variable '%s' dentro de corchetes no está declarada%n",
-                                numeroLinea, dentro);
-                    }
-                }
-            }
+      //Separar la condición por operadores, espacios o paréntesis
+      String[] tokens = condicion.split("[()=<>!+\\-*/\\s]+");
+      //Recorrer las condiciones 
+      for (String token: tokens) {
+        token = token.trim();
+        if (token.isEmpty() || palabrasIgnorar.contains(token.toLowerCase()) || token.matches("\\d+|\\d+;|;")) {
+          continue; // ignorar
         }
+
+        //Tomar la parte antes del corchete
+        String antes = token.contains("[") ?
+          token.substring(0, token.indexOf("[")).trim() :
+          token;
+
+        if (!identificadores.contains(antes)) {
+          salida.printf("Error 233. Línea %04d. La variable '%s' no está declarada%n",
+            numeroLinea, antes);
+        }
+
+        // Validar contenido dentro de corchetes
+        if (token.contains("[") && token.contains("]")) {
+          String dentro = token.substring(token.indexOf("[") + 1, token.indexOf("]")).trim();
+          if (!identificadores.contains(dentro)) {
+            salida.printf("Error 233. Línea %04d. La variable '%s' dentro de corchetes no está declarada%n",
+              numeroLinea, dentro);
+          }
+        }
+      }
     }
-}
+  }
+  }

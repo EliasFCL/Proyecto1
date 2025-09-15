@@ -12,13 +12,13 @@ const nombres      : array[0..11] of string  = (
 
 var meses : array[0..11] of integer;
 var tecla, i, dia, modulo : integer;
-var day, year, mes, dayofweek: word;
+var day, year, mes, dayofweek : word;
 
 begin
 {inicio del programa}
     for i:=0 to 11 do
         begin
-            meses[iz] := months[i];
+            meses[i] := months[i];
         end;
     getdate (year, mes , day, dayofweek);
     dec (mes);

@@ -13,14 +13,13 @@ Error 210. Línea 0008. 'const' debe contener un ';' al final
 0012 
 0013 var meses : array[0..11] of integer;
 0014 var tecla, i, dia, modulo : integer;
-0015 var day, year, mes, dayofweek: word;
+0015 var day, year, mes, dayofweek : word;
 0016 
 0017 begin
 0018 {inicio del programa}
 0019     for i:=0 to 11 do
 0020         begin
-0021             meses[iz] := months[i];
-Error 235. Línea 0021. La variable 'iz' en los corchetes no está declarada
+0021             meses[i] := months[i];
 0022         end;
 0023     getdate (year, mes , day, dayofweek);
 0024     dec (mes);

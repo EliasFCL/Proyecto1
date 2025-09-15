@@ -107,7 +107,7 @@ public class Proyecto1 {
         }
         
         if (lineaTrim.startsWith("while") || lineaTrim.startsWith("until")) {
-          variableExiste.validarWhileUntil(lineaTrim, numeroLinea, identificadores, salida);
+          variableExiste.validarUntilWhile(lineaTrim, numeroLinea, identificadores, salida);
         }
 
         //Validacion del end

@@ -14,7 +14,7 @@ public class validacionesVar {
     "FORWARD", "FUNCTION", "GOTO", "RECORD", "IF", "IN", "OR", "PRIVATE", "UNTIL", "PROGRAM", "REPEAT",
     "STRING", "THEN", "VAR", "WHILE", "XOR", "WITH", "TYPE", "OF", "USES", "SET", "OBJECT", "TO"
   ));
-  
+
   //Método para las validaciones de los indicadores
   public static void validarVar(String lineaTrim, int numeroLinea, PrintWriter salida, boolean esperandoUses,
     boolean beginEncontrado, boolean constEncontrado, Set < String > identificadores
@@ -24,7 +24,7 @@ public class validacionesVar {
       salida.printf("Error 211. Línea %04d. 'var' debe aparecer después de 'const' y antes de 'begin'%n", numeroLinea);
     }
 
-    String declaracion = lineaTrim.substring(3).trim();//Quitar "var"
+    String declaracion = lineaTrim.substring(3).trim(); //Quitar "var"
     String[] partes = declaracion.split(",");
 
     try {
@@ -35,7 +35,7 @@ public class validacionesVar {
         identificadores.add(identificador);
 
         if (identificador.isEmpty()) {
-          salida.printf("Error 3333. Línea %04d. Debe existir un nombre de variable.%n", numeroLinea);
+          salida.printf("Error 3333. Línea %04d. Debe existir un nombre para la variable.%n", numeroLinea);
         }
 
         if (reservadas.contains(identificador.toUpperCase())) {
@@ -43,9 +43,13 @@ public class validacionesVar {
         }
 
         if (lineaTrim.contains(":")) {
-          String espacio = lineaTrim.substring(lineaTrim.indexOf(":") + 1);
-          if (!espacio.startsWith(" ")) {
+          String espacioDespues = lineaTrim.substring(lineaTrim.indexOf(":") + 1);
+          String espacioAntes = lineaTrim.substring(lineaTrim.indexOf(":") - 1);
+          if (!espacioDespues.startsWith(" ")) {
             salida.printf("Error. Línea %04d. Debe haber un espacio después de los dos puntos en la declaración de la variable.%n", numeroLinea);
+          }
+          if(!espacioAntes.startsWith(" ")){
+               salida.printf("Error. Línea %04d. Debe haber un espacio antes de los dos puntos en la declaración de la variable.%n", numeroLinea);
           }
         }
         //Comprobar si empieza por una letra 
@@ -56,17 +60,17 @@ public class validacionesVar {
         }
         //Tomar lo que esta después de los 2 puntos
         String despuesDosPuntos = lineaTrim.substring(lineaTrim.indexOf(":") + 1).trim();
-        
+
         //Quitar los 2 puntos para validar solo el tipo
         if (despuesDosPuntos.endsWith(";")) {
           despuesDosPuntos = despuesDosPuntos.substring(0, despuesDosPuntos.length() - 1).trim();
         }
-        
+
         //Quedarse solo con lo que esta después de 'of' si esta después de los 2 puntos
         if (despuesDosPuntos.toLowerCase().contains("of")) {
           despuesDosPuntos = despuesDosPuntos.substring(despuesDosPuntos.toLowerCase().lastIndexOf("of") + 2).trim();
         }
-        
+
         //Validar que el tipo sea integer, string o word
         if (!(despuesDosPuntos.equalsIgnoreCase("integer") ||
             despuesDosPuntos.equalsIgnoreCase("string") ||
