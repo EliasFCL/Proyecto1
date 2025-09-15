@@ -2,9 +2,9 @@ program calendario;
 uses crt, dos;
 
 const borde = #205#205#205#205#205#205#205#205#205;
-const months       : array[0..11] of integer = (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
+const m1onths       : array[0..11] of integer = (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 const year_regular : array[0..11] of integer = ( 0,  3,  3,  6,  1,  4,  6,  2,  5,  0,  3,  5);
-const year_bisiesto: array[0..11] of integer = ( 0,  3,  4,  0,  2,  5,  0,  3,  6,  1,  4,  6);
+const year_bisi2esto: array[0..11] of integer = ( 0,  3,  4,  0,  2,  5,  0,  3,  6,  1,  4,  6)
 const nombres      : array[0..11] of string  = (
     '  Enero   ', ' Febrero  ', '  Marzo   ', '  Abril   ',
     '   Mayo   ', '  Junio   ', '  Julio   ', '  Agosto  ',
