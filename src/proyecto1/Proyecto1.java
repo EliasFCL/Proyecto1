@@ -35,6 +35,7 @@ public class Proyecto1 {
       boolean despuesVar = false;
       boolean endEncontrado = false;
       boolean beginEncontrado = false;
+      boolean esperandoCierre = false;
       Set < String > identificadores = new HashSet < > (); //Lista par añadir los identificadores
       Set < String > constantes = new HashSet < > (); //Lista para añadir las constantes
 
@@ -63,13 +64,32 @@ public class Proyecto1 {
         if (lineaTrim.startsWith("var")) {
           constCorrecto = false; //ya no se permiten const
         }
+
         if (lineaTrim.startsWith("const")) {
+          //Si todavía se esta esperando un cierre del const
+          if (esperandoCierre) {
+            salida.printf("Error 210. Línea %04d. El 'const' anterior no contiene un ';'%n", numeroLinea - 1);
+            esperandoCierre = false; // se resetea para no encadenar más errores
+          }
+
           if (!constCorrecto) {
             salida.printf("Error 210. Línea %04d. 'const' debe estar entre uses y var%n", numeroLinea);
           }
-          if (lineaTrim.startsWith("const")) {
-            validacionesConst.validarConst(lineaTrim, numeroLinea, salida, constCorrecto, constantes);
-            constEncontrado = true;
+
+          if (!lineaTrim.endsWith(";")) {
+            esperandoCierre = true;
+          }
+
+          validacionesConst.validarConst(lineaTrim, numeroLinea, salida, constCorrecto, constantes);
+          constEncontrado = true;
+        }
+        //Si el const lleva multi línea
+        if (esperandoCierre) {
+          if (lineaTrim.endsWith(");")) {
+            esperandoCierre = false;//Se cerro correctamente el const
+          } else if (lineaTrim.startsWith("var")) {//El const no se ha cerrado y se encontro la palabra 'var'
+            salida.printf("Error 212. Línea %04d. 'var' encontrado y 'const' no cerrado correctamente, falta ');'%n", numeroLinea);
+            esperandoCierre = false;
           }
         }
         //Validaciones del var
@@ -97,15 +117,15 @@ public class Proyecto1 {
         if (lineaTrim.startsWith("for") || lineaTrim.contains(":=")) {
           variableExiste.validarFor(lineaTrim, linea, numeroLinea, identificadores, constantes, salida);
         }
-        
+
         if (lineaTrim.contains("dec") || lineaTrim.contains("getdate") || lineaTrim.contains("inc")) {
           variableExiste.validarGetDate(lineaTrim, linea, numeroLinea, identificadores, salida);
         }
-        
+
         if (lineaTrim.startsWith("if")) {
-            variableExiste.validarIf(lineaTrim, numeroLinea, identificadores, salida);
+          variableExiste.validarIf(lineaTrim, numeroLinea, identificadores, salida);
         }
-        
+
         if (lineaTrim.startsWith("while") || lineaTrim.startsWith("until")) {
           variableExiste.validarUntilWhile(lineaTrim, numeroLinea, identificadores, salida);
         }

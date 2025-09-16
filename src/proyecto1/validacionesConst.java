@@ -66,10 +66,6 @@ public class validacionesConst {
         }
       }
 
-      if (!lineaTrim.endsWith(";")) {
-        salida.printf("Error 210. Línea %04d. 'const' debe contener un ';' al final%n", numeroLinea);
-      }
-
       //Dividir por coma entre constantes
       String[] partes = declaracion.split("\\s*,\\s*(?=[a-zA-Z])");//Separa solo cuando empieza con letra
       //Extraer el nombre de cada constante 

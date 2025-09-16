@@ -1,3 +1,5 @@
+//Resetear la lectura(mark y reset): https://www.tutorialspoint.com/java/io/bufferedreader_reset.htm 
+
 package proyecto1;
 
 import java.io.*;
@@ -88,7 +90,9 @@ public class validacionesWrite {
     }
 
     if (!lineaTrim.endsWith(";")) {
-      String siguienteLinea = entrada.readLine();
+      //Marcar posición del reader (al inicio de la línea write)
+      entrada.mark(1000);
+      String siguienteLinea = entrada.readLine();//Leer la siguiente línea
       if (siguienteLinea != null) {
         String siguienteTrim = siguienteLinea.trim().toLowerCase();
         //Si lo que sigue después del write es un 'end' se omite el error, pero si es 'end;' mostrarlo
@@ -98,6 +102,8 @@ public class validacionesWrite {
           salida.printf("Error 222. Línea %04d. Falta el punto y coma del write%n", numeroLinea);
         }
       }
+      //Volver al inicio de la línea leída(posición marcada)
+      entrada.reset();
     }
   }
 }
