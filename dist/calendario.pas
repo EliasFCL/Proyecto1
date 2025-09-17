@@ -4,15 +4,21 @@ uses crt, dos;
 const borde = #205#205#205#205#205#205#205#205#205;
 const months       : array[0..11] of integer = (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 const year_regular : array[0..11] of integer = ( 0,  3,  3,  6,  1,  4,  6,  2,  5,  0,  3,  5);
-const year_bisiesto: array[0..11] of integer = ( 0,  3,  4,  0,  2,  5,  0,  3,  6,  1,  4,  6);
+const year_bisiesto : array[0..11] of integer = ( 0,  3,  4,  0,  2,  5,  0,  3,  6,  1,  4,  6);
 const nombres      : array[0..11] of string  = (
     '  Enero   ', ' Febrero  ', '  Marzo   ', '  Abril   ',
     '   Mayo   ', '  Junio   ', '  Julio   ', '  Agosto  ',
     'Septiembre', ' Octubre  ', 'Noviembre ', 'Diciembre ');
 
 var meses : array[0..11] of integer;
-var tecla, i, dia, modulo : integer;
-var day, year, mes, dayofweek : word;
+var tecla : integer;
+var i : integer;
+var dia : integer;
+var modulo : integer;
+var day : word;
+var year : word;
+var mes : word;
+var dayofweek : word;
 
 begin
 {inicio del programa}
@@ -40,7 +46,7 @@ begin
             writeln (#201, borde, #203, borde, #203, borde, #203, borde, #203, borde, #203, borde, #203, borde, #187);
             write   (#186' Domingo '#186'  Lunes  '#186' Martes  '#186'Mi'#130'rcoles'#186' Jueves  '#186' Viernes ');
             writeln (#186' S'#160'bado  '#186);
-            writeln (#204, borde, #206, borde, #205, borde, #206, borde, #206, borde, #206, borde, #206, borde, #185);
+            writeln (#204, borde, #206, borde, #206, borde, #206, borde, #206, borde, #206, borde, #206, borde, #185);
             while dia <= meses[mes] do
                 begin
                     for i:=0 to 6 do
