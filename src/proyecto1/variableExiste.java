@@ -45,7 +45,7 @@ public class variableExiste {
         String ladoIzq = lados[0].trim();//Todo lo que esta antes del :=
         String ladoDer = lados[1].trim();//Todo lo que esta despues del :=
 
-        //Extraer corchete del lado izquierdo
+        //Extraer lo que esta al lado corchete del lado izquierdo
         String idIzq = ladoIzq.replaceAll("\\[.*?\\]", "").replace(";", "").trim();
         //Validar que los corchetes tengan contenido
         int inicial = ladoIzq.indexOf("[");//Corchete de la izquierda
@@ -67,10 +67,7 @@ public class variableExiste {
           salida.printf("Error 233. Línea %04d. La variable '%s' no está declarada%n",
             numeroLinea, idIzq);
         }
-        //Lista con palabras reservadas
-        Set < String > palabrasIgnorar = new HashSet < > (Arrays.asList(
-          "and", "or", "not", "mod", "div", "then", "else", "do", "ord", "readkey","for"
-        ));
+
         //Validar que el contenido de los corchetes este correcto y que estos existan
         if (inicial != -1 && fin != -1 && fin > inicial + 1) {
           String dentro = ladoIzq.substring(inicial + 1, fin).trim();
@@ -79,16 +76,18 @@ public class variableExiste {
           for (String token: tokensCorchetes) {
             //Contenido a ignorar
             String contenidoToken = token.trim();
-            if (contenidoToken.isEmpty()) continue;
             if (contenidoToken.matches("\\d+")) continue;
-            if (palabrasIgnorar.contains(contenidoToken.toLowerCase())) continue;
-            if (constantes.contains(contenidoToken)) continue;
             if (!identificadores.contains(contenidoToken)) {
               salida.printf("Error 235. Línea %04d. La variable '%s' en los corchetes no está declarada%n",
                 numeroLinea, contenidoToken);
             }
           }
         }
+        
+        //Lista con palabras reservadas
+        Set < String > palabrasIgnorar = new HashSet < > (Arrays.asList(
+          "and", "or", "not", "mod", "div", "then", "else", "do", "ord", "readkey","for"
+        ));
 
         //Comprobar y validar el lado derecho
         ladoDer = ladoDer.replaceAll("[\\[\\];]", " ").trim();
@@ -96,7 +95,6 @@ public class variableExiste {
         for (String token: tokens) {
           //Contenido a ignorar
           String contenidoToken = token.trim();
-          if (contenidoToken.isEmpty()) continue;
           if (contenidoToken.matches("\\d+")) continue;
           if (palabrasIgnorar.contains(contenidoToken.toLowerCase())) continue;
           if (constantes.contains(contenidoToken)) continue;

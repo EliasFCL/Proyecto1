@@ -45,7 +45,6 @@ public class validacionesIniciales {
       try {
         if (lineaTrim.isEmpty() || lineaTrim.startsWith("//") || lineaTrim.startsWith("{")) {
           salida.printf("Error 205. Línea %04d. No puede haber nada(incluyendo espacios vacios) entre 'program' y 'uses'%n", numeroLinea);
-          return;
         }
 
         //Verificar que exista uses después de program
@@ -57,19 +56,9 @@ public class validacionesIniciales {
           salida.printf("Error 207. Línea %04d. La línea 'uses' debe terminar en punto y coma%n", numeroLinea);
         } else {
           //Verificar que exista un comando
-          String comando = lineaTrim.substring(4, lineaTrim.length() - 1).trim();
+          String comando = lineaTrim.substring(4).replace(";", "").trim();
           if (comando.isEmpty()) {
             salida.printf("Error 299. Línea %04d. Debe existir un comando después de uses%n", numeroLinea);
-          } else {
-            //Separar por comas
-            String[] comandoComa = comando.split(",");
-            //Validar que exista un comando entre comas
-            for (String separar: comandoComa) {
-              separar = separar.trim();
-              if (separar.isEmpty()) {
-                salida.printf("Error 299. Línea %04d. Debe haber un comando antes de la coma%n", numeroLinea);
-              }
-            }
           }
         }
       } catch (Exception e) {
@@ -83,7 +72,6 @@ public class validacionesIniciales {
     for (String palabra: lineaTrim.split("[^a-zA-Z0-9_]+")) {
       if (palabra.equalsIgnoreCase("program")) {
         salida.printf("Error 203. Línea %04d. 'program' está repetido%n", numeroLinea);
-        break;
       }
     }
   }

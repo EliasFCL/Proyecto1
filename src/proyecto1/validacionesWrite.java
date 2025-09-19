@@ -20,7 +20,7 @@ public class validacionesWrite {
     //Validar los paréntesis
     int inicio = linea.indexOf("(");
     int fin = linea.lastIndexOf(")");
-    if (inicio == -1 || fin == -1 || fin <= inicio) {
+    if (inicio == -1 || fin == -1) {
       salida.printf("Error 217. Línea %04d. La línea del 'write' no contiene uno de sus paréntesis%n", numeroLinea);
     } else {
       String contenido = linea.substring(inicio + 1, fin).trim();
@@ -41,27 +41,20 @@ public class validacionesWrite {
             errorCadena = true;
           }
         }
-        if (dentroComilla && !errorCadena) {
-          salida.printf("Error 221. Línea %04d. Faltan cerrar comillas en la cadena dentro del paréntesis%n", numeroLinea);
-        }
       }
 
       //Validación de variables y constantes
       String[] tokens = contenido.split(",");
-      Set < String > palabrasIgnorar = new HashSet < > (Arrays.asList(
-        "and", "or", "not", "mod", "div", "then", "else", "do"
-      ));
 
       //Validar contenido de los parentésis
       for (String token: tokens) {
         String contenidoToken = token.trim();
         //Contenido a ignorar
         if (contenidoToken.isEmpty()) continue;
-        if (palabrasIgnorar.contains(contenidoToken.toLowerCase())) continue;
         if (contenidoToken.matches("('.*'|#\\d+|'[^']*'#\\d+|#\\d+'.*')")) continue;
         if (contenidoToken.matches("((#\\d+)|('.*?'))+")) continue;
         if (constantes.contains(contenidoToken)) continue;
-        if (contenidoToken.matches("\\d+") || contenidoToken.matches("#\\d+") || contenidoToken.equals(";")) continue;
+        if (contenidoToken.matches("\\d+") || contenidoToken.equals(";")) continue;
 
         //Variables dentro corchetes
         String corchete = contenidoToken;
@@ -71,14 +64,14 @@ public class validacionesWrite {
           contCorchete = contenidoToken.substring(contenidoToken.indexOf("[") + 1, contenidoToken.indexOf("]")).trim();
         }
 
-        //Quitar los corchetes 
+        //Quitar 2 puntos seguidos de 1 o mas dígitos(para la línea 60)
         corchete = corchete.replaceAll(":\\d+$", "");
 
         boolean encontrado = false;
         if (identificadores.contains(corchete) || constantes.contains(corchete)) {
           encontrado = true;
         }
-
+        //Si el contenido no es nulo y no es un identificador entonces el contenido no es valido
         if (contCorchete != null && !identificadores.contains(contCorchete)) {
           encontrado = false;
         }

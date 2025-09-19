@@ -17,8 +17,7 @@ public class validacionesVar {
 
   //Método para las validaciones de los indicadores
   public static void validarVar(String lineaTrim, int numeroLinea, PrintWriter salida, boolean esperandoUses,
-    boolean beginEncontrado, boolean constEncontrado, Set < String > identificadores
-  ) {
+    boolean beginEncontrado, boolean constEncontrado, Set < String > identificadores) {
     //Verificar que los indicadores estén en la posición correcta
     if (esperandoUses || beginEncontrado || !constEncontrado) {
       salida.printf("Error 211. Línea %04d. 'var' debe aparecer después de 'const' y antes de 'begin'%n", numeroLinea);
@@ -30,7 +29,7 @@ public class validacionesVar {
         //Obtener identificador (lo que está antes de los 2 puntos)
         String identificador = "";
         if (declaracion.contains(":")) {
-            identificador = declaracion.split(":")[0].trim();
+            identificador = declaracion.split(":")[0].trim(); //El identificador sera lo que esta antes de ":"
             identificadores.add(identificador);//Se añade el identificador a la lista
         }
 

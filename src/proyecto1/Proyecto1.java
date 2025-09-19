@@ -64,7 +64,7 @@ public class Proyecto1 {
         if (lineaTrim.startsWith("var")) {
           constCorrecto = false; //ya no se permiten const
         }
-
+        
         if (lineaTrim.startsWith("const")) {
           //Si todavía se esta esperando un cierre del const
           if (esperandoCierre) {
@@ -73,7 +73,7 @@ public class Proyecto1 {
           }
 
           if (!constCorrecto) {
-            salida.printf("Error 210. Línea %04d. 'const' debe estar entre uses y var%n", numeroLinea);
+            salida.printf("Error 234. Línea %04d. 'const' debe estar entre uses y var%n", numeroLinea);
           }
 
           if (!lineaTrim.endsWith(";")) {
@@ -141,7 +141,7 @@ public class Proyecto1 {
           if (!beginEncontrado) {
             salida.printf("Error 216. Línea %04d. 'write' no puede estar antes de begin'%n", numeroLinea);
           }
-          if (lineaTrim.startsWith("write") || lineaTrim.startsWith("writeln")) {
+          if (lineaTrim.startsWith("write")) {
             validacionesWrite.validarWrite(linea, lineaTrim, numeroLinea, salida,
               beginEncontrado, constantes, identificadores, entrada);
           }
