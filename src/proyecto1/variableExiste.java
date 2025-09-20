@@ -45,7 +45,7 @@ public class variableExiste {
         String ladoIzq = lados[0].trim();//Todo lo que esta antes del :=
         String ladoDer = lados[1].trim();//Todo lo que esta despues del :=
 
-        //Extraer lo que esta al lado corchete del lado izquierdo
+        //Extraer lo que esta al lado izquierdo del corchete
         String idIzq = ladoIzq.replaceAll("\\[.*?\\]", "").replace(";", "").trim();
         //Validar que los corchetes tengan contenido
         int inicial = ladoIzq.indexOf("[");//Corchete de la izquierda

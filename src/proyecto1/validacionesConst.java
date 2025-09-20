@@ -11,10 +11,6 @@ public class validacionesConst {
   public static void validarConst(String lineaTrim, int numeroLinea, PrintWriter salida,
     boolean constCorrecto, Set < String > constantes) {
     try {
-      if (!constCorrecto) {
-        salida.printf("Error 210. Línea %04d. 'const' debe estar ubicado entre uses y var%n", numeroLinea);
-      }
-
       String declaracion = lineaTrim.substring(5).trim();//Quitar la palabra 'const'
 
       //Verificar si se tiene un ":" o "="

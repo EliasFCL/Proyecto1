@@ -74,9 +74,9 @@ public class validacionesVar {
             }
 
             //Validar que el tipo sea integer, string o word
-            if (!(despuesDosPuntos.contains("integer") ||
-                  despuesDosPuntos.contains("string") ||
-                  despuesDosPuntos.contains("word"))) {
+            if (!(despuesDosPuntos.equals("integer") || despuesDosPuntos.contains("of integer") ||
+                  despuesDosPuntos.equals("string") ||
+                  despuesDosPuntos.equals("word"))) {
                 salida.printf("Error 02. Línea %04d. Tipo de variable inválido: %s%n", numeroLinea, despuesDosPuntos);
             } else if (!lineaTrim.endsWith(";")) {
                 salida.printf("Error 01. Línea %04d. La declaración del var debe terminar con punto y coma.%n", numeroLinea, despuesDosPuntos);
