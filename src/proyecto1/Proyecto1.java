@@ -18,8 +18,8 @@ public class Proyecto1 {
     }
 
     String entradaCMD = args[0]; //Obtener el archivo .pas
-    String nombreArchivo = entradaCMD.replace(".pas", ""); //Reemplazar el .pas para solo tener el nombre del archivo
-    String archivoErrores = nombreArchivo + "-errores.err";
+    String Archivo = entradaCMD.replace(".pas", ""); //Reemplazar el .pas para solo tener el nombre del archivo
+    String archivoErrores = Archivo + "-errores.err";
 
     try (
       BufferedReader entrada = new BufferedReader(new FileReader(entradaCMD)); //Leer el archivo indicado en el cmd
@@ -32,7 +32,7 @@ public class Proyecto1 {
       boolean esperandoUses = false;
       boolean constCorrecto = false;
       boolean constEncontrado = false;
-      boolean despuesVar = false;
+      boolean varEncontrado = false;
       boolean endEncontrado = false;
       boolean beginEncontrado = false;
       boolean esperandoCierre = false;
@@ -41,16 +41,16 @@ public class Proyecto1 {
 
       //Mientras hallan líneas para leer
       while ((linea = entrada.readLine()) != null) {
-        String lineaTrim = linea.trim().toLowerCase(); //Eliminar espacios sobrantes y convertir a minúscula 
+        String lineaTrim = linea.trim(); //Eliminar espacios sobrantes y convertir a minúscula 
         salida.printf("%04d %s%n", numeroLinea, linea); //Imprimir las líneas junto con su número de línea
 
         //Validaciones iniciales
         if (!programOriginal) {
-          validacionesIniciales.validarProgram(lineaTrim, linea, numeroLinea, nombreArchivo, salida, programOriginal, esperandoUses);
+          validacionesIniciales.validarProgram(lineaTrim, linea, numeroLinea, Archivo, salida, programOriginal, esperandoUses);
           programOriginal = true;
           esperandoUses = true;
         } else if (esperandoUses) {
-          validacionesIniciales.validarUses(lineaTrim, numeroLinea, salida, esperandoUses);
+          validacionesIniciales.validarUses(lineaTrim, numeroLinea, salida);
           esperandoUses = false;
         } else {
           validacionesIniciales.programRepetido(lineaTrim, numeroLinea, salida);
@@ -68,19 +68,19 @@ public class Proyecto1 {
         if (lineaTrim.startsWith("const")) {
           //Si todavía se esta esperando un cierre del const
           if (esperandoCierre) {
-            salida.printf("Error 210. Línea %04d. El 'const' anterior no contiene un ';'%n", numeroLinea - 1);
+            salida.printf("Error 001. Línea %04d. El 'const' anterior no contiene un ';'%n", numeroLinea - 1);
             esperandoCierre = false; // se resetea para no encadenar más errores
           }
 
           if (!constCorrecto) {
-            salida.printf("Error 234. Línea %04d. 'const' debe estar entre uses y var%n", numeroLinea);
+            salida.printf("Error 002. Línea %04d. 'const' debe estar entre uses y var%n", numeroLinea);
           }
 
           if (!lineaTrim.endsWith(";")) {
             esperandoCierre = true;
           }
 
-          validacionesConst.validarConst(lineaTrim, numeroLinea, salida, constCorrecto, constantes);
+          validacionesConst.validarConst(lineaTrim, numeroLinea, salida, constantes);
           constEncontrado = true;
         }
         //Si el const lleva multi línea
@@ -88,7 +88,7 @@ public class Proyecto1 {
           if (lineaTrim.endsWith(");")) {
             esperandoCierre = false;//Se cerro correctamente el const
           } else if (lineaTrim.startsWith("var")) {//El const no se ha cerrado y se encontro la palabra 'var'
-            salida.printf("Error 212. Línea %04d. 'var' encontrado y 'const' no cerrado correctamente, falta ');'%n", numeroLinea);
+            salida.printf("Error 003. Línea %04d. 'var' encontrado y 'const' no cerrado correctamente, falta ');'%n", numeroLinea);
             esperandoCierre = false;
           }
         }
@@ -99,17 +99,17 @@ public class Proyecto1 {
 
         //Validaciones del begin
         if (lineaTrim.startsWith("var")) {
-          despuesVar = true; //Marcar que ya se encontraron declaraciones var
+          varEncontrado = true; //Marcar que ya se encontraron declaraciones var
         }
 
         if (lineaTrim.startsWith("begin")) {
           //Validar que aparezca después de var
-          if (!despuesVar) {
-            salida.printf("Error 211. Línea %04d. 'begin' debe aparecer después de la declaración de var%n", numeroLinea);
+          if (!varEncontrado) {
+            salida.printf("Error 004. Línea %04d. 'begin' debe aparecer después de la declaración de var%n", numeroLinea);
           }
           //Validar que begin esté solo en su línea
           if (!lineaTrim.equals("begin")) {
-            salida.printf("Error 212. Línea %04d. 'begin' debe estar solo en su línea, sin otras palabras ni comentarios%n", numeroLinea);
+            salida.printf("Error 005. Línea %04d. 'begin' debe estar solo en su línea, sin otras palabras ni comentarios%n", numeroLinea);
           }
           beginEncontrado = true;
         }
@@ -139,7 +139,7 @@ public class Proyecto1 {
         if (lineaTrim.startsWith("write") || lineaTrim.startsWith("writeln")) {
 
           if (!beginEncontrado) {
-            salida.printf("Error 216. Línea %04d. 'write' no puede estar antes de begin'%n", numeroLinea);
+            salida.printf("Error 006. Línea %04d. 'write' no puede estar antes de begin'%n", numeroLinea);
           }
           if (lineaTrim.startsWith("write")) {
             validacionesWrite.validarWrite(linea, lineaTrim, numeroLinea, salida,
@@ -149,22 +149,22 @@ public class Proyecto1 {
         //Validaciones de comentarios
         if (lineaTrim.startsWith("/")) {
           if (!lineaTrim.startsWith("//")) {
-            salida.printf("Error 223. Línea %04d. Para iniciar un comentario debe usar '//'%n", numeroLinea);
+            salida.printf("Error 007. Línea %04d. Para iniciar un comentario debe usar '//'%n", numeroLinea);
           }
         }
         if (lineaTrim.startsWith("{")) {
           if (!lineaTrim.endsWith("}")) {
-            salida.printf("Error 224. Línea %04d. Falta el segundo corchete, no usar comentarios de doble línea %n", numeroLinea);
+            salida.printf("Error 008. Línea %04d. Falta el segundo corchete, no usar comentarios de doble línea %n", numeroLinea);
           }
         } else if (lineaTrim.startsWith("}")) {
-          salida.printf("Error 225. Línea %04d. Ese corchete es invalido debe empezar con '{'%n", numeroLinea);
+          salida.printf("Error 009. Línea %04d. Ese corchete es invalido debe empezar con '{'%n", numeroLinea);
         }
         //Validar que no haya contenido después del punto y coma
         if (lineaTrim.contains(";")) {
           int postPuntoComa = lineaTrim.indexOf(";");
           String despuesPuntoComa = lineaTrim.substring(postPuntoComa + 1).trim();
           if (!despuesPuntoComa.isEmpty()) {
-            salida.printf("Error 225. Línea %04d. No puede haber ningun tipo de contenido después del ';'%n", numeroLinea);
+            salida.printf("Error 010. Línea %04d. No puede haber ningun tipo de contenido después del ';'%n", numeroLinea);
           }
         }
         numeroLinea++; //Aumentar el número de líneas

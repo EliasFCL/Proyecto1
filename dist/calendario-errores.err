@@ -54,6 +54,7 @@
 0054                             if (dia<1) or (dia>meses[mes]) then
 0055                                 begin
 0056                                     write (#186'         ')
+Error 047. Línea 0056. Falta el punto y coma del write
 0057                                 end	
 0058                             else
 0059                                 begin
@@ -65,6 +66,7 @@
 0065                     if dia<=meses[mes] then
 0066                         begin
 0067                             writeln (#204, borde, #206, borde, #206, borde, #206, borde, #206, borde, #206, borde, #206, borde, #185)
+Error 047. Línea 0067. Falta el punto y coma del write
 0068                         end	
 0069                     else
 0070                         begin

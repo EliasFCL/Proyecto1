@@ -13,8 +13,6 @@ public class variableExiste {
   public static void validarFor(String lineaTrim, String linea, int numeroLinea, Set < String > identificadores, Set < String > constantes,
     PrintWriter salida) {
     
-    //Validacion del for y :=
-    if (lineaTrim.startsWith("for") || lineaTrim.contains(":=")) {
         //Validacion del for
       if (lineaTrim.startsWith("for")) {
         String[] tokens = lineaTrim.split("\\s+"); //Separar por espacios
@@ -104,14 +102,12 @@ public class variableExiste {
           }
         }
       }
-    }
   }
   
   //Validacion de getdate, dec e inc
   public static void validarGetDate(String lineaTrim, String linea, int numeroLinea, Set < String > identificadores,
     PrintWriter salida) {
 
-    if (lineaTrim.contains("dec") || lineaTrim.contains("getdate") || lineaTrim.contains("inc")) {
       int inicial = linea.indexOf("(");
       int fin = linea.lastIndexOf(")");
 
@@ -137,13 +133,11 @@ public class variableExiste {
           }
         }
       }
-    }
   }
 
   //Validacion del if
   public static void validarIf(String lineaTrim, int numeroLinea, Set < String > identificadores, PrintWriter salida) {
 
-    if (lineaTrim.startsWith("if")) {
       String condicion = lineaTrim.substring(2).trim();
 
       //Lista con palabras reservadas
@@ -202,13 +196,11 @@ public class variableExiste {
           }
         }
       }
-    }
   }
   //Validaciones del until y while
   public static void validarUntilWhile(String lineaTrim, int numeroLinea, Set < String > identificadores,
     PrintWriter salida) {
 
-    if (lineaTrim.startsWith("while") || lineaTrim.startsWith("until")) {
       //Cortar la palabra ("while"/"until") y obtener la condición
       String condicion = lineaTrim.substring(5).trim();
 
@@ -245,6 +237,5 @@ public class variableExiste {
           }
         }
       }
-    }
   }
   }

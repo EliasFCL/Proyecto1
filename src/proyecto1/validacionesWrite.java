@@ -1,5 +1,3 @@
-//Resetear la lectura(mark y reset): https://www.tutorialspoint.com/java/io/bufferedreader_reset.htm 
-
 package proyecto1;
 
 import java.io.*;
@@ -15,17 +13,17 @@ public class validacionesWrite {
     Set < String > constantes, Set < String > identificadores, BufferedReader entrada) throws IOException {
 
     if (!beginEncontrado) {
-      salida.printf("Error 216. Línea %04d. 'write' no puede estar antes de begin'%n", numeroLinea);
+      salida.printf("Error 042. Línea %04d. 'write' no puede estar antes de begin'%n", numeroLinea);
     }
     //Validar los paréntesis
     int inicio = linea.indexOf("(");
     int fin = linea.lastIndexOf(")");
     if (inicio == -1 || fin == -1) {
-      salida.printf("Error 217. Línea %04d. La línea del 'write' no contiene uno de sus paréntesis%n", numeroLinea);
+      salida.printf("Error 043. Línea %04d. La línea del 'write' no contiene uno de sus paréntesis%n", numeroLinea);
     } else {
       String contenido = linea.substring(inicio + 1, fin).trim();
       if (contenido.isEmpty()) {
-        salida.printf("Error 219. Línea %04d. Los paréntesis no pueden ir vacíos%n", numeroLinea);
+        salida.printf("Error 044. Línea %04d. Los paréntesis no pueden ir vacíos%n", numeroLinea);
       } else {
         //Comprobar si las comillas están bien cerradas
         boolean dentroComilla = false;
@@ -37,7 +35,7 @@ public class validacionesWrite {
             dentroComilla = !dentroComilla;
             if (!dentroComilla) errorCadena = false;
           } else if (dentroComilla && caracter == ',' && !errorCadena) {
-            salida.printf("Error 220. Línea %04d. Falta comilla antes de la coma%n", numeroLinea);
+            salida.printf("Error 045. Línea %04d. Falta comilla antes de la coma%n", numeroLinea);
             errorCadena = true;
           }
         }
@@ -77,26 +75,13 @@ public class validacionesWrite {
         }
 
         if (!encontrado) {
-          salida.printf("Error 233. Línea %04d. La palabra '%s' no es una variable o constante válida%n", numeroLinea, contenidoToken);
+          salida.printf("Error 046. Línea %04d. La palabra '%s' no es una variable o constante válida%n", numeroLinea, contenidoToken);
         }
       }
     }
 
     if (!lineaTrim.endsWith(";")) {
-      //Marcar posición del reader (al inicio de la línea write)
-      entrada.mark(1000);
-      String siguienteLinea = entrada.readLine();//Leer la siguiente línea
-      if (siguienteLinea != null) {
-        String siguienteTrim = siguienteLinea.trim().toLowerCase();
-        //Si lo que sigue después del write es un 'end' se omite el error, pero si es 'end;' mostrarlo
-        if (siguienteTrim.equals("end")) {
-          //No hacer nada
-        } else if (siguienteTrim.equals("end;") || siguienteTrim.startsWith("write")) {
-          salida.printf("Error 222. Línea %04d. Falta el punto y coma del write%n", numeroLinea);
-        }
-      }
-      //Volver al inicio de la línea leída(posición marcada)
-      entrada.reset();
+      salida.printf("Error 047. Línea %04d. Falta el punto y coma del write%n", numeroLinea);
     }
   }
 }
