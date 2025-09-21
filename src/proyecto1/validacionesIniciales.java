@@ -7,9 +7,7 @@ import java.io.*;
  */
 public class validacionesIniciales {
 
-  public static void validarProgram(String lineaTrim, String linea, int numeroLinea, String Archivo, PrintWriter salida,
-    boolean programOriginal, boolean esperandoUses
-  ) {
+  public static void validarProgram(String lineaTrim, int numeroLinea, String Archivo, PrintWriter salida, boolean programOriginal) {
     try {
       if (!programOriginal) {
         //Verificar que no haya contenido antes de program
@@ -66,10 +64,8 @@ public class validacionesIniciales {
 
   public static void programRepetido(String lineaTrim, int numeroLinea, PrintWriter salida) {
     //Revisar las líneas para comprobar que no se repite program 
-    for (String palabra: lineaTrim.split("[^a-zA-Z0-9_]+")) {
-      if (palabra.equalsIgnoreCase("program")) {
+      if (lineaTrim.equalsIgnoreCase("program")) {
         salida.printf("Error 019. Línea %04d. 'program' está repetido%n", numeroLinea);
       }
-    }
   }
 }

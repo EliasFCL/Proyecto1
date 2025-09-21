@@ -33,7 +33,6 @@ public class Proyecto1 {
       boolean constCorrecto = false;
       boolean constEncontrado = false;
       boolean varEncontrado = false;
-      boolean endEncontrado = false;
       boolean beginEncontrado = false;
       boolean esperandoCierre = false;
       Set < String > identificadores = new HashSet < > (); //Lista par añadir los identificadores
@@ -46,7 +45,7 @@ public class Proyecto1 {
 
         //Validaciones iniciales
         if (!programOriginal) {
-          validacionesIniciales.validarProgram(lineaTrim, linea, numeroLinea, Archivo, salida, programOriginal, esperandoUses);
+          validacionesIniciales.validarProgram(lineaTrim , numeroLinea, Archivo, salida, programOriginal);
           programOriginal = true;
           esperandoUses = true;
         } else if (esperandoUses) {
@@ -115,11 +114,11 @@ public class Proyecto1 {
         }
         //Validar que existan las variables
         if (lineaTrim.startsWith("for") || lineaTrim.contains(":=")) {
-          variableExiste.validarFor(lineaTrim, linea, numeroLinea, identificadores, constantes, salida);
+          variableExiste.validarFor(lineaTrim, numeroLinea, identificadores, constantes, salida);
         }
 
         if (lineaTrim.contains("dec") || lineaTrim.contains("getdate") || lineaTrim.contains("inc")) {
-          variableExiste.validarGetDate(lineaTrim, linea, numeroLinea, identificadores, salida);
+          variableExiste.validarGetDate(lineaTrim, numeroLinea, identificadores, salida);
         }
 
         if (lineaTrim.startsWith("if")) {
@@ -130,11 +129,6 @@ public class Proyecto1 {
           variableExiste.validarUntilWhile(lineaTrim, numeroLinea, identificadores, salida);
         }
 
-        //Validacion del end
-        if (linea.startsWith("end")) {
-          validacionesEnd.validarEnd(linea, lineaTrim, numeroLinea, salida, entrada, endEncontrado);
-        }
-
         //Validaciones de los write y writeln
         if (lineaTrim.startsWith("write") || lineaTrim.startsWith("writeln")) {
 
@@ -142,9 +136,13 @@ public class Proyecto1 {
             salida.printf("Error 006. Línea %04d. 'write' no puede estar antes de begin'%n", numeroLinea);
           }
           if (lineaTrim.startsWith("write")) {
-            validacionesWrite.validarWrite(linea, lineaTrim, numeroLinea, salida,
-              beginEncontrado, constantes, identificadores, entrada);
+            validacionesWrite.validarWrite(lineaTrim, numeroLinea, salida, beginEncontrado, constantes, identificadores);
           }
+        }
+        
+        //Validacion del end
+        if (linea.startsWith("end")) {
+          validacionesEnd.validarEnd(lineaTrim, numeroLinea, salida, entrada);
         }
         //Validaciones de comentarios
         if (lineaTrim.startsWith("/")) {

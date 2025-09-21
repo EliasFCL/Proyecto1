@@ -9,8 +9,7 @@ import java.util.regex.*;
  */
 public class validacionesConst {
 
-  public static void validarConst(String lineaTrim, int numeroLinea, PrintWriter salida,
-    Set < String > constantes) {
+  public static void validarConst(String lineaTrim, int numeroLinea, PrintWriter salida, Set < String > constantes) {
     enum tipos {
       reservadas("(ABSOLUTE|DOWNTO|BEGIN|DESTRUCTOR|MOD|AND|ELSE|CASE|EXTERNAL|NOT|ARRAY|END|CONST|DIV|PACKED|ASM|FILE|CONSTRUCTOR|" +
         "DO|PROCEDURE|FOR|FORWARD|FUNCTION|GOTO|RECORD|IF|IN|OR|PRIVATE|UNTIL|PROGRAM|REPEAT|STRING|THEN|VAR|WHILE|XOR|WITH|" +
@@ -39,10 +38,11 @@ public class validacionesConst {
         //Tomar la parte antes de ":" o "="
         String nombreConstante;
         if (declaracion.contains(":")) {
-          nombreConstante = declaracion.split(":", 2)[0].trim();
+          nombreConstante = declaracion.split(":")[0].trim();
         } else {
-          nombreConstante = declaracion.split("=", 2)[0].trim();
+          nombreConstante = declaracion.split("=")[0].trim();
         }
+        constantes.add(nombreConstante);//Añadir la constante a la lista
 
         //Validaciones del identificador
         if (!Character.isLetter(nombreConstante.charAt(0))) {
@@ -80,17 +80,6 @@ public class validacionesConst {
 
         if (valor.isEmpty()) {
           salida.printf("Error 041. Línea %04d. La constante '%s' debe tener un valor después del '='%n", numeroLinea, nombreConstante);
-        }
-      }
-
-      //Dividir por coma entre constantes
-      String[] partes = declaracion.split("\\s*,\\s*(?=[a-zA-Z])"); //Separa solo cuando empieza con letra
-      //Extraer el nombre de cada constante 
-      for (String parte: partes) {
-        parte = parte.trim();
-        String nombreConstante = parte.split("=")[0].split(":")[0].trim();
-        if (!nombreConstante.isEmpty()) {
-          constantes.add(nombreConstante);
         }
       }
     } catch (Exception e) {

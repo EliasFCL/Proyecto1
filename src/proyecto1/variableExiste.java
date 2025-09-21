@@ -10,7 +10,7 @@ import java.util.*;
 
 public class variableExiste {
 
-  public static void validarFor(String lineaTrim, String linea, int numeroLinea, Set < String > identificadores, Set < String > constantes,
+  public static void validarFor(String lineaTrim, int numeroLinea, Set < String > identificadores, Set < String > constantes,
     PrintWriter salida) {
     
         //Validacion del for
@@ -76,7 +76,7 @@ public class variableExiste {
             String contenidoToken = token.trim();
             if (contenidoToken.matches("\\d+")) continue;
             if (!identificadores.contains(contenidoToken)) {
-              salida.printf("Error 235. Línea %04d. La variable '%s' en los corchetes no está declarada%n",
+              salida.printf("Error 235. Línea %04d. La variable '%s' dentro de corchetes no está declarada%n",
                 numeroLinea, contenidoToken);
             }
           }
@@ -97,7 +97,7 @@ public class variableExiste {
           if (palabrasIgnorar.contains(contenidoToken.toLowerCase())) continue;
           if (constantes.contains(contenidoToken)) continue;
           if (!identificadores.contains(contenidoToken)) {
-            salida.printf("Error 234. Línea %04d. La variable '%s' en la expresión no está declarada%n",
+            salida.printf("Error 234. Línea %04d. La variable '%s' no está declarada%n",
               numeroLinea, contenidoToken);
           }
         }
@@ -105,16 +105,15 @@ public class variableExiste {
   }
   
   //Validacion de getdate, dec e inc
-  public static void validarGetDate(String lineaTrim, String linea, int numeroLinea, Set < String > identificadores,
-    PrintWriter salida) {
+  public static void validarGetDate(String lineaTrim, int numeroLinea, Set < String > identificadores, PrintWriter salida) {
 
-      int inicial = linea.indexOf("(");
-      int fin = linea.lastIndexOf(")");
+      int inicial = lineaTrim.indexOf("(");
+      int fin = lineaTrim.lastIndexOf(")");
 
       if (inicial == -1 || fin == -1 || fin < inicial) {
         salida.printf("Error. Línea %04d. Se debe tener el paréntesis con una variable%n", numeroLinea);
       } else {
-        String contenido = linea.substring(inicial + 1, fin).trim();
+        String contenido = lineaTrim.substring(inicial + 1, fin).trim();
         String[] parametros = contenido.split(",");
         //Recorrer parametros entre los parentésis
         for (String parametro: parametros) {
@@ -198,8 +197,7 @@ public class variableExiste {
       }
   }
   //Validaciones del until y while
-  public static void validarUntilWhile(String lineaTrim, int numeroLinea, Set < String > identificadores,
-    PrintWriter salida) {
+  public static void validarUntilWhile(String lineaTrim, int numeroLinea, Set < String > identificadores, PrintWriter salida) {
 
       //Cortar la palabra ("while"/"until") y obtener la condición
       String condicion = lineaTrim.substring(5).trim();

@@ -40,7 +40,7 @@ public class validacionesVar {
       String identificador = "";
       if (declaracion.contains(":")) {
         identificador = declaracion.split(":")[0].trim(); //El identificador sera lo que esta antes de ":"
-        identificadores.add(identificador); //Se añade el identificador a la lista
+        identificadores.add(identificador);//Se añade el identificador a la lista
       }
 
       if (identificador.isEmpty()) {
@@ -48,7 +48,7 @@ public class validacionesVar {
       }
 
       if (tipos.Reservada(identificador.toUpperCase())) {
-        salida.printf("Error 022. Línea %04d. Se está utilizando una palabra reservada para declarar un identificador%n", numeroLinea);
+        salida.printf("Error 022. Línea %04d. Se está utilizando una palabra reservada para declarar una variable%n", numeroLinea);
       }
       //Verificar que la declaracion contenga los 2 puntos y los espacios
       if (lineaTrim.contains(":")) {
@@ -74,9 +74,8 @@ public class validacionesVar {
       }
 
       //Comprobar lo que está después de los 2 puntos
-      String tipoVar = "";
+      String tipoVar = lineaTrim.substring(lineaTrim.indexOf(":") + 1).trim();
       if (lineaTrim.contains(":")) {
-        tipoVar = lineaTrim.substring(lineaTrim.indexOf(":") + 1).trim();
         
         //Quitar el punto y coma final
         if (tipoVar.endsWith(";")) {
