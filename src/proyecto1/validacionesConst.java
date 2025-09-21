@@ -75,7 +75,7 @@ public class validacionesConst {
         String valor = declaracion.substring(declaracion.indexOf("=") + 1).trim();
         //Quitar el ';'
         if (valor.endsWith(";")) {
-          valor = valor.substring(0, valor.length() - 1).trim();
+          valor = valor.replace(";","").trim();
         }
 
         if (valor.isEmpty()) {

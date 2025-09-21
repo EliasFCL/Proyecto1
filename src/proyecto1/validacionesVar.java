@@ -50,7 +50,7 @@ public class validacionesVar {
       if (tipos.Reservada(identificador.toUpperCase())) {
         salida.printf("Error 022. Línea %04d. Se está utilizando una palabra reservada para declarar un identificador%n", numeroLinea);
       }
-      //Verificar que la declaracion contenga los 2 puntos
+      //Verificar que la declaracion contenga los 2 puntos y los espacios
       if (lineaTrim.contains(":")) {
         String espacioDespues = lineaTrim.substring(lineaTrim.indexOf(":") + 1);
         String espacioAntes = lineaTrim.substring(lineaTrim.indexOf(":") - 1);
@@ -77,10 +77,12 @@ public class validacionesVar {
       String tipoVar = "";
       if (lineaTrim.contains(":")) {
         tipoVar = lineaTrim.substring(lineaTrim.indexOf(":") + 1).trim();
-
+        
         //Quitar el punto y coma final
         if (tipoVar.endsWith(";")) {
-          tipoVar = tipoVar.substring(0, tipoVar.length() - 1).trim();
+          tipoVar = tipoVar.replace(";","").trim();
+        }else{
+            salida.printf("Error 029. Línea %04d. La declaración del var debe terminar con punto y coma.%n", numeroLinea, tipoVar);
         }
 
         //Validar que el tipo sea integer, string o word
@@ -88,8 +90,6 @@ public class validacionesVar {
             tipoVar.equals("string") ||
             tipoVar.equals("word"))) {
           salida.printf("Error 028. Línea %04d. Tipo de variable inválido: %s%n", numeroLinea, tipoVar);
-        } else if (!lineaTrim.endsWith(";")) {
-          salida.printf("Error 029. Línea %04d. La declaración del var debe terminar con punto y coma.%n", numeroLinea, tipoVar);
         }
       }
     } catch (Exception e) {
