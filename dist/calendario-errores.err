@@ -22,7 +22,8 @@
 0022 
 0023 begin
 0024 {inicio del programa}
-0025     for i:=0 to 11 do
+0025     for iz:=0 to 11 do
+Error 049. Línea 0025. La variable 'iz' no está declarada
 0026         begin
 0027             meses[i] := months[i];
 0028         end;
