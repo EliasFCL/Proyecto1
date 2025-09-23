@@ -22,7 +22,7 @@ var dayofweek : word;
 
 begin
 {inicio del programa}
-    for iz:=0 to 11 do
+    for i:=0 to 11 do
         begin
             meses[i] := months[i];
         end;

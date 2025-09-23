@@ -21,7 +21,7 @@ public class validacionesWrite {
     if (inicio == -1 || fin == -1) {
       salida.printf("Error 043. Línea %04d. La línea del 'write' no contiene uno de sus paréntesis%n", numeroLinea);
     } else {
-      String contenido = lineaTrim.substring(inicio + 1, fin).trim();//Se toma lo que esta después del  primero paréntesis y antes del ultimo
+      String contenido = lineaTrim.substring(inicio + 1, fin).trim();//Se toma lo que esta después del  primer paréntesis y antes del ultimo
       if (contenido.isEmpty()) {
         salida.printf("Error 044. Línea %04d. Los paréntesis no pueden ir vacíos%n", numeroLinea);
       } else {
