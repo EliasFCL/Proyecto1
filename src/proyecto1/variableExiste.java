@@ -2,12 +2,10 @@ package proyecto1;
 
 import java.io.*;
 import java.util.*;
-
 /**
  *
  * @author Dell
  */
-
 public class variableExiste {
 
   public static void validarFor(String lineaTrim, int numeroLinea, Set < String > identificadores, Set < String > constantes,
@@ -15,12 +13,12 @@ public class variableExiste {
 
     //Validacion del for    
     if (lineaTrim.startsWith("for")) {
-      String declaracion = lineaTrim.substring(3).trim(); //Quitar for
-      String variable = "";
+      //Quitar el for
+      String variable = lineaTrim.substring(3).trim();
       boolean encontrado = false;
       //Comprobar que después del for exista un identificador 
-      if (declaracion.contains(":")) {
-        variable = declaracion.split(":")[0].trim(); //La variable sera lo que esta antes de los 2 puntos
+      if (variable.contains(":")) {
+        variable = variable.split(":")[0].trim(); //La variable sera lo que esta antes de los 2 puntos
         if (variable.isEmpty()) {
           salida.printf("Error 048. Línea %04d. Después del for debe haber un identificador%n", numeroLinea);
         } else {
@@ -41,13 +39,9 @@ public class variableExiste {
       //Separar por operadores, espacios o paréntesis
       String[] tokens = lineaTrim.split("[():=<>!+\\-*/\\s]+");
 
-      Set < String > palabrasIgnorar = new HashSet < > (Arrays.asList(
-        "and", "or", "not", "mod", "div", "then", "else", "do", "ord", "readkey", "for"
-      ));
-
       for (String token: tokens) {
         token = token.trim();
-        if (token.isEmpty() || palabrasIgnorar.contains(token.toLowerCase()) || token.matches("\\d+|\\d+;|;")) {
+        if (token.isEmpty() || TablaReservadas.tipos.Reservada(token) || token.matches("\\d+|\\d+;|;")) {
           continue; //Ignorar números, vacíos o palabras reservadas
         }
         //Validar lo que esta antes del corchete
@@ -101,13 +95,9 @@ public class variableExiste {
     //Separar por operadores, espacios o paréntesis
     String[] tokens = declaracion.split("[():=<>!+\\-*/\\s]+");
 
-    Set < String > palabrasIgnorar = new HashSet < > (Arrays.asList(
-      "and", "or", "not", "mod", "div", "then", "else", "do", "ord", "readkey", "for"
-    ));
-
     for (String token: tokens) {
       token = token.trim();
-      if (token.isEmpty() || palabrasIgnorar.contains(token.toLowerCase()) || token.matches("\\d+|\\d+;|;")) {
+      if (token.isEmpty() || TablaReservadas.tipos.Reservada(token) || token.matches("\\d+|\\d+;|;")) {
         continue; //Ignorar números, vacíos o palabras reservadas
       }
 
@@ -128,17 +118,12 @@ public class variableExiste {
     //Eliminar el until o while
     String condicion = lineaTrim.substring(5).trim();
 
-    //Lista de palabras reservadas
-    Set < String > palabrasIgnorar = new HashSet < > (Arrays.asList(
-      "and", "or", "not", "mod", "div", "then", "else", "do"
-    ));
-
     //Separar la condición por operadores, espacios o paréntesis
     String[] tokens = condicion.split("[()=<>!+\\-*/\\s]+");
     //Recorrer las condiciones 
     for (String token: tokens) {
       token = token.trim();
-      if (token.isEmpty() || palabrasIgnorar.contains(token.toLowerCase()) || token.matches("\\d+|\\d+;|;")) {
+      if (token.isEmpty() || TablaReservadas.tipos.Reservada(token) || token.matches("\\d+|\\d+;|;")) {
         continue; //ignorar
       }
 
@@ -156,7 +141,7 @@ public class variableExiste {
     }
   }
   public static void validarCorchetes(String token, int numeroLinea, Set < String > identificadores, PrintWriter salida) {
-    
+
     if (token.contains("[") && token.contains("]")) {
       String dentro = token.substring(token.indexOf("[") + 1, token.indexOf("]")).trim();
       dentro = dentro.replace(";", "").trim();

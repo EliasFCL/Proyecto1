@@ -2,7 +2,6 @@ package proyecto1;
 
 import java.io.*;
 import java.util.*;
-import java.util.regex.*;
 /**
  *
  * @author Dell
@@ -10,24 +9,6 @@ import java.util.regex.*;
 public class validacionesConst {
 
   public static void validarConst(String lineaTrim, int numeroLinea, PrintWriter salida, Set < String > constantes) {
-    enum tipos {
-      reservadas("(ABSOLUTE|DOWNTO|BEGIN|DESTRUCTOR|MOD|AND|ELSE|CASE|EXTERNAL|NOT|ARRAY|END|CONST|DIV|PACKED|ASM|FILE|CONSTRUCTOR|" +
-        "DO|PROCEDURE|FOR|FORWARD|FUNCTION|GOTO|RECORD|IF|IN|OR|PRIVATE|UNTIL|PROGRAM|REPEAT|STRING|THEN|VAR|WHILE|XOR|WITH|" +
-        "TYPE|OF|USES|SET|OBJECT|TO)");
-
-      public final String patron;
-      tipos(String s) {
-        this.patron = s;
-      }
-      public static boolean Reservada(String identificador) {
-        //Crear un Pattern a partir de reservadas
-        Pattern pattern = Pattern.compile(reservadas.patron);
-        //Verificar si coincidencias con las reservadas
-        Matcher matcher = pattern.matcher(identificador.toUpperCase());
-        return matcher.matches();//Devuelve true si es una palabra reservada
-    }
-    };
-
     try {
       String declaracion = lineaTrim.substring(5).trim(); //Quitar la palabra 'const'
 
@@ -49,7 +30,7 @@ public class validacionesConst {
           salida.printf("Error 034. Línea %04d. El nombre de la constante '%s' debe comenzar con una letra.%n", numeroLinea, nombreConstante);
         } else if (!nombreConstante.matches("^[a-zA-Z][a-zA-Z_]*$")) {
           salida.printf("Error 035. Línea %04d. El identificador '%s' es inválido. Usar solo letras y guiones bajos.%n", numeroLinea, nombreConstante);
-        } else if (tipos.Reservada(nombreConstante.toUpperCase())) {
+        } else if (TablaReservadas.tipos.Reservada(nombreConstante) == true) {
           salida.printf("Error 036. Línea %04d. Se está usando una palabra reservada para la constante.%n", numeroLinea, nombreConstante);
         }
 

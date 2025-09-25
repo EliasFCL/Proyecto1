@@ -1,30 +1,11 @@
 package proyecto1;
 import java.io.*;
 import java.util.*;
-import java.util.regex.*;
 /**
  *
  * @author Dell
  */
 public class validacionesVar {
-  enum tipos {
-    reservadas("(ABSOLUTE|DOWNTO|BEGIN|DESTRUCTOR|MOD|AND|ELSE|CASE|EXTERNAL|NOT|ARRAY|END|CONST|DIV|PACKED|ASM|FILE|CONSTRUCTOR|" +
-      "DO|PROCEDURE|FOR|FORWARD|FUNCTION|GOTO|RECORD|IF|IN|OR|PRIVATE|UNTIL|PROGRAM|REPEAT|STRING|THEN|VAR|WHILE|XOR|WITH|" +
-      "TYPE|OF|USES|SET|OBJECT|TO)");
-
-    public final String patron;
-    tipos(String s) {
-      this.patron = s;
-    }
-    public static boolean Reservada(String identificador) {
-      //Crear un Pattern a partir de reservadas
-      Pattern pattern = Pattern.compile(reservadas.patron);
-      //Verificar si coincidencias con las reservadas
-      Matcher matcher = pattern.matcher(identificador.toUpperCase());
-      return matcher.matches();//Devuelve true si es una palabra reservada
-    }
-  };
-
   //Método para las validaciones de los indicadores
   public static void validarVar(String lineaTrim, int numeroLinea, PrintWriter salida, boolean esperandoUses,
     boolean beginEncontrado, boolean constEncontrado, Set < String > identificadores) {
@@ -37,19 +18,9 @@ public class validacionesVar {
 
     try {
       //Obtener identificador (lo que está antes de los 2 puntos)
-      String identificador = "";
-      if (declaracion.contains(":")) {
-        identificador = declaracion.split(":")[0].trim(); //El identificador sera lo que esta antes de ":"
-        identificadores.add(identificador);//Se añade el identificador a la lista
-      }
+      String identificador = declaracion.split(":")[0].trim(); //El identificador sera lo que esta antes de ":"
+      identificadores.add(identificador);//Se añade el identificador a la lista
 
-      if (identificador.isEmpty()) {
-        salida.printf("Error 021. Línea %04d. Debe existir un nombre para la variable.%n", numeroLinea);
-      }
-
-      if (tipos.Reservada(identificador.toUpperCase())) {
-        salida.printf("Error 022. Línea %04d. Se está utilizando una palabra reservada para declarar una variable%n", numeroLinea);
-      }
       //Verificar que la declaracion contenga los 2 puntos y los espacios
       if (lineaTrim.contains(":")) {
         String espacioDespues = lineaTrim.substring(lineaTrim.indexOf(":") + 1);
@@ -64,14 +35,18 @@ public class validacionesVar {
         salida.printf("Error 025. Línea %04d. La declaración debe tener un ':' después del nombre.%n", numeroLinea);
       }
 
-      //Comprobar si empieza por una letra 
-      if (!identificador.isEmpty()) {
+      //Validaciones del identificador
         if (!Character.isLetter(identificador.charAt(0))) {
-          salida.printf("Error 026. Línea %04d. El nombre de la variable '%s' debe comenzar con una letra.%n", numeroLinea, identificador);
+          salida.printf("Error 034. Línea %04d. El nombre de la variable '%s' debe comenzar con una letra.%n", numeroLinea, identificador);
         } else if (!identificador.matches("^[a-zA-Z][a-zA-Z_]*$")) {
-          salida.printf("Error 027. Línea %04d. El identificador '%s' es inválido. Usar solo letras y guiones bajos.%n", numeroLinea, identificador);
+          salida.printf("Error 035. Línea %04d. El identificador '%s' es inválido. Usar solo letras y guiones bajos.%n", numeroLinea, identificador);
+        } else if (TablaReservadas.tipos.Reservada(identificador) == true) {
+          salida.printf("Error 036. Línea %04d. Se está usando una palabra reservada para la variable.%n", numeroLinea, identificador);
         }
-      }
+
+        if (identificador.isEmpty()) {
+          salida.printf("Error 037. Línea %04d. El nombre de la constante no puede ser nulo%n", numeroLinea);
+        }
 
       //Comprobar lo que está después de los 2 puntos
       String tipoVar = lineaTrim.substring(lineaTrim.indexOf(":") + 1).trim();

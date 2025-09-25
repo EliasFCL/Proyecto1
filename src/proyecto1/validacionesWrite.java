@@ -2,7 +2,6 @@ package proyecto1;
 
 import java.io.*;
 import java.util.*;
-
 /**
  *
  * @author Dell
