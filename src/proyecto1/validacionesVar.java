@@ -40,7 +40,7 @@ public class validacionesVar {
           salida.printf("Error 034. Línea %04d. El nombre de la variable '%s' debe comenzar con una letra.%n", numeroLinea, identificador);
         } else if (!identificador.matches("^[a-zA-Z][a-zA-Z_]*$")) {
           salida.printf("Error 035. Línea %04d. El identificador '%s' es inválido. Usar solo letras y guiones bajos.%n", numeroLinea, identificador);
-        } else if (TablaReservadas.tipos.Reservada(identificador) == true) {
+        } else if (metodos.tipos.Reservada(identificador) == true) {
           salida.printf("Error 036. Línea %04d. Se está usando una palabra reservada para la variable.%n", numeroLinea, identificador);
         }
 

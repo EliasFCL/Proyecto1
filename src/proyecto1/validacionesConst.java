@@ -30,7 +30,7 @@ public class validacionesConst {
           salida.printf("Error 034. Línea %04d. El nombre de la constante '%s' debe comenzar con una letra.%n", numeroLinea, nombreConstante);
         } else if (!nombreConstante.matches("^[a-zA-Z][a-zA-Z_]*$")) {
           salida.printf("Error 035. Línea %04d. El identificador '%s' es inválido. Usar solo letras y guiones bajos.%n", numeroLinea, nombreConstante);
-        } else if (TablaReservadas.tipos.Reservada(nombreConstante) == true) {
+        } else if (metodos.tipos.Reservada(nombreConstante) == true) {
           salida.printf("Error 036. Línea %04d. Se está usando una palabra reservada para la constante.%n", numeroLinea, nombreConstante);
         }
 

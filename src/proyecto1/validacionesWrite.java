@@ -25,19 +25,15 @@ public class validacionesWrite {
         salida.printf("Error 044. Línea %04d. Los paréntesis no pueden ir vacíos%n", numeroLinea);
       } else {
         //Comprobar si las comillas están bien cerradas
-        boolean dentroComilla = false;
-        boolean errorCadena = false;
+        boolean comillaAbierta = false;
         //Verificar si hay una coma dentro del parentésis
         for (int i = 0; i < contenido.length(); i++) {
           char caracter = contenido.charAt(i);
           if (caracter == '\'') {
-            dentroComilla = !dentroComilla;
-            if (!dentroComilla) {
-                errorCadena = false;
-            }
-          } else if (dentroComilla && caracter == ',' && !errorCadena) {
+            comillaAbierta = !comillaAbierta;
+          } else if (comillaAbierta && caracter == ',') {
             salida.printf("Error 045. Línea %04d. Falta comilla antes de la coma%n", numeroLinea);
-            errorCadena = true;
+            break;
           }
         }
       }
@@ -53,13 +49,12 @@ public class validacionesWrite {
         if (contenidoToken.matches("('.*'|#\\d+|'[^']*'#\\d+|#\\d+'.*')")) continue;
         if (contenidoToken.matches("((#\\d+)|('.*?'))+")) continue;
         if (constantes.contains(contenidoToken)) continue;
-        if (contenidoToken.matches("\\d+") || contenidoToken.equals(";")) continue;
-
+        
         //Variables dentro corchetes
         String corchete = contenidoToken;
         String contCorchete = null;
         if (contenidoToken.contains("[")) {
-          corchete = contenidoToken.substring(0, contenidoToken.indexOf("[")).trim();
+          corchete = token.split("\\[")[0].trim();
           contCorchete = contenidoToken.substring(contenidoToken.indexOf("[") + 1, contenidoToken.indexOf("]")).trim();
         }
 

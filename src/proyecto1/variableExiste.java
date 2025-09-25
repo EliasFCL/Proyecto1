@@ -41,7 +41,7 @@ public class variableExiste {
 
       for (String token: tokens) {
         token = token.trim();
-        if (token.isEmpty() || TablaReservadas.tipos.Reservada(token) || token.matches("\\d+|\\d+;|;")) {
+        if (token.isEmpty() || metodos.tipos.Reservada(token) || token.matches("\\d+|\\d+;|;")) {
           continue; //Ignorar números, vacíos o palabras reservadas
         }
         //Validar lo que esta antes del corchete
@@ -52,7 +52,7 @@ public class variableExiste {
           salida.printf("Error 051. Línea %04d. La variable '%s' no está declarada%n", numeroLinea, antes);
         }
         //Validar contenido dentro de corchetes
-        validarCorchetes(token, numeroLinea, identificadores, salida);
+        metodos.validarCorchetes(token, numeroLinea, identificadores, salida);
       }
     }
   }
@@ -63,8 +63,8 @@ public class variableExiste {
     int inicial = lineaTrim.indexOf("(");
     int fin = lineaTrim.lastIndexOf(")");
 
-    if (inicial == -1 || fin == -1 || fin < inicial) {
-      salida.printf("Error 054. Línea %04d. Se debe tener el paréntesis con una variable%n", numeroLinea);
+    if (inicial == -1 || fin == -1) {
+      salida.printf("Error 054. Línea %04d. Falta uno de los paréntesis%n", numeroLinea);
     } else {
       String contenido = lineaTrim.substring(inicial + 1, fin).trim(); //Extraer lo ques esta entre paréntesis
       String[] parametros = contenido.split(",");
@@ -97,7 +97,7 @@ public class variableExiste {
 
     for (String token: tokens) {
       token = token.trim();
-      if (token.isEmpty() || TablaReservadas.tipos.Reservada(token) || token.matches("\\d+|\\d+;|;")) {
+      if (token.isEmpty() || metodos.tipos.Reservada(token) || token.matches("\\d+")) {
         continue; //Ignorar números, vacíos o palabras reservadas
       }
 
@@ -109,7 +109,7 @@ public class variableExiste {
         salida.printf("Error 051. Línea %04d. La variable '%s' no está declarada%n", numeroLinea, antes);
       }
       //Validar el contenido de los corchetes
-      validarCorchetes(token, numeroLinea, identificadores, salida);
+      metodos.validarCorchetes(token, numeroLinea, identificadores, salida);
     }
   }
   //Validaciones del until y while
@@ -123,7 +123,7 @@ public class variableExiste {
     //Recorrer las condiciones 
     for (String token: tokens) {
       token = token.trim();
-      if (token.isEmpty() || TablaReservadas.tipos.Reservada(token) || token.matches("\\d+|\\d+;|;")) {
+      if (token.isEmpty() || metodos.tipos.Reservada(token) || token.matches("\\d+|\\d+;|;")) {
         continue; //ignorar
       }
 
@@ -137,20 +137,7 @@ public class variableExiste {
       }
 
       //Validar contenido dentro de corchetes
-      validarCorchetes(token, numeroLinea, identificadores, salida);
-    }
-  }
-  public static void validarCorchetes(String token, int numeroLinea, Set < String > identificadores, PrintWriter salida) {
-
-    if (token.contains("[") && token.contains("]")) {
-      String dentro = token.substring(token.indexOf("[") + 1, token.indexOf("]")).trim();
-      dentro = dentro.replace(";", "").trim();
-
-      if (dentro.isEmpty()) {
-        salida.printf("Error 052. Línea %04d. No existe una variable dentro de los corchetes%n", numeroLinea);
-      } else if (!identificadores.contains(dentro) && !dentro.matches("\\d+")) {
-        salida.printf("Error 053. Línea %04d. La variable dentro de los corchetes no está declarada%n", numeroLinea);
-      }
+      metodos.validarCorchetes(token, numeroLinea, identificadores, salida);
     }
   }
 }

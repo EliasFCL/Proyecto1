@@ -169,7 +169,6 @@ public class Proyecto1 {
       }
 
       System.out.println("Archivo de errores creado: " + archivoErrores);
-
     } catch (IOException e) {
       System.err.println("Error al leer o escribir el archivo: " + e.getMessage());
     }
