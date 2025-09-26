@@ -65,6 +65,7 @@ public class Proyecto1 {
         }
         
         if (lineaTrim.startsWith("const")) {
+
           //Si todavía se esta esperando un cierre del const
           if (esperandoCierre) {
             salida.printf("Error 001. Línea %04d. El 'const' anterior no contiene un ';'%n", numeroLinea - 1);
@@ -74,7 +75,7 @@ public class Proyecto1 {
           if (!constCorrecto) {
             salida.printf("Error 002. Línea %04d. 'const' debe estar entre uses y var%n", numeroLinea);
           }
-
+          
           if (!lineaTrim.endsWith(";")) {
             esperandoCierre = true;
           }
@@ -94,13 +95,10 @@ public class Proyecto1 {
         //Validaciones del var
         if (lineaTrim.startsWith("var")) {
           validacionesVar.validarVar(lineaTrim, numeroLinea, salida, esperandoUses, beginEncontrado, constEncontrado, identificadores);
-        }
-
-        //Validaciones del begin
-        if (lineaTrim.startsWith("var")) {
           varEncontrado = true; //Marcar que ya se encontraron declaraciones var
         }
 
+        //Validaciones del begin
         if (lineaTrim.startsWith("begin")) {
           //Validar que aparezca después de var
           if (!varEncontrado) {
@@ -135,9 +133,7 @@ public class Proyecto1 {
           if (!beginEncontrado) {
             salida.printf("Error 006. Línea %04d. 'write' no puede estar antes de begin'%n", numeroLinea);
           }
-          if (lineaTrim.startsWith("write")) {
-            validacionesWrite.validarWrite(lineaTrim, numeroLinea, salida, beginEncontrado, constantes, identificadores);
-          }
+          validacionesWrite.validarWrite(lineaTrim, numeroLinea, salida, beginEncontrado, constantes, identificadores);
         }
         
         //Validacion del end

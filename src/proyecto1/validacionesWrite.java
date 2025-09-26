@@ -25,17 +25,20 @@ public class validacionesWrite {
         salida.printf("Error 044. Línea %04d. Los paréntesis no pueden ir vacíos%n", numeroLinea);
       } else {
         //Comprobar si las comillas están bien cerradas
-        boolean comillaAbierta = false;
+        int cantComillas = 0;
         //Verificar si hay una coma dentro del parentésis
         for (int i = 0; i < contenido.length(); i++) {
           char caracter = contenido.charAt(i);
-          if (caracter == '\'') {
-            comillaAbierta = !comillaAbierta;
-          } else if (comillaAbierta && caracter == ',') {
-            salida.printf("Error 045. Línea %04d. Falta comilla antes de la coma%n", numeroLinea);
-            break;
+          if(caracter == '\"'){
+            salida.printf("Error 076. Línea %04d. La comilla doble no es valida, debe ser simple%n", numeroLinea);
           }
+          if (caracter == '\'') {
+            cantComillas++;
+          } 
         }
+        if(cantComillas % 2 != 0){
+             salida.printf("Error 098. Línea %04d. Faltan comillas por cerrar%n", numeroLinea);
+          }
       }
 
       //Validación de variables y constantes

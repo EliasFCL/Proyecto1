@@ -60,9 +60,7 @@ public class validacionesVar {
         }
 
         //Validar que el tipo sea integer, string o word
-        if (!(tipoVar.equals("integer") || tipoVar.contains("of integer") ||
-            tipoVar.equals("string") ||
-            tipoVar.equals("word"))) {
+        if (!(tipoVar.equals("integer") || tipoVar.equals("string") || tipoVar.equals("word"))) {
           salida.printf("Error 028. Línea %04d. Tipo de variable inválido: %s%n", numeroLinea, tipoVar);
         }
       }

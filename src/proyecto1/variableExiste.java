@@ -38,7 +38,7 @@ public class variableExiste {
     } else if (lineaTrim.contains(":=")) {
       //Separar por operadores, espacios o paréntesis
       String[] tokens = lineaTrim.split("[():=<>!+\\-*/\\s]+");
-
+      
       for (String token: tokens) {
         token = token.trim();
         if (token.isEmpty() || metodos.tipos.Reservada(token) || token.matches("\\d+|\\d+;|;")) {

@@ -11,6 +11,7 @@
 0011     'Septiembre', ' Octubre  ', 'Noviembre ', 'Diciembre ');
 0012 
 0013 var meses : array[0..11] of integer;
+Error 028. Línea 0013. Tipo de variable inválido: array[0..11] of integer
 0014 var tecla : integer;
 0015 var i : integer;
 0016 var dia : integer;
@@ -24,7 +25,8 @@
 0024 {inicio del programa}
 0025     for i:=0 to 11 do
 0026         begin
-0027             meses[i] := months[i];
+0027             [i] := months[i];
+Error 050. Línea 0027. Debe haber una variables antes de '['
 0028         end;
 0029     getdate (year, mes , day, dayofweek);
 0030     dec (mes);
@@ -45,7 +47,9 @@
 0045             writeln ('          '#17, nombres[mes], #16'                       '#30, year, #31);
 0046             writeln (#201, borde, #203, borde, #203, borde, #203, borde, #203, borde, #203, borde, #203, borde, #187);
 0047             write   (#186' Domingo '#186'  Lunes  '#186' Martes  '#186'Mi'#130'rcoles'#186' Jueves  '#186' Viernes ');
-0048             writeln (#186' S'#160'bado  '#186);
+0048             writeln (#186' S'#160'bado  #186);
+Error 098. Línea 0048. Faltan comillas por cerrar
+Error 046. Línea 0048. La palabra '#186' S'#160'bado  #186' no es una variable o constante válida
 0049             writeln (#204, borde, #206, borde, #206, borde, #206, borde, #206, borde, #206, borde, #206, borde, #185);
 0050             while dia <= meses[mes] do
 0051                 begin

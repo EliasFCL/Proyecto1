@@ -64,7 +64,7 @@ public class validacionesIniciales {
 
   public static void programRepetido(String lineaTrim, int numeroLinea, PrintWriter salida) {
     //Revisar las líneas para comprobar que no se repite program 
-      if (lineaTrim.equalsIgnoreCase("program")) {
+      if (lineaTrim.startsWith("program")) {
         salida.printf("Error 019. Línea %04d. 'program' está repetido%n", numeroLinea);
       }
   }
