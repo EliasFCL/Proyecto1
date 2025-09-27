@@ -89,7 +89,7 @@ public class Proyecto1 {
             esperandoCierre = false;//Se cerro correctamente el const
           } else if (lineaTrim.startsWith("var")) {//El const no se ha cerrado y se encontro la palabra 'var'
             salida.printf("Error 003. Línea %04d. 'var' encontrado y 'const' no cerrado correctamente, falta ');'%n", numeroLinea);
-            esperandoCierre = false;
+            esperandoCierre = false;//Se cambia a false para evitar una cadena de errores
           }
         }
         //Validaciones del var
@@ -129,10 +129,6 @@ public class Proyecto1 {
 
         //Validaciones de los write y writeln
         if (lineaTrim.startsWith("write") || lineaTrim.startsWith("writeln")) {
-
-          if (!beginEncontrado) {
-            salida.printf("Error 006. Línea %04d. 'write' no puede estar antes de begin'%n", numeroLinea);
-          }
           validacionesWrite.validarWrite(lineaTrim, numeroLinea, salida, beginEncontrado, constantes, identificadores);
         }
         
@@ -146,12 +142,10 @@ public class Proyecto1 {
             salida.printf("Error 007. Línea %04d. Para iniciar un comentario debe usar '//'%n", numeroLinea);
           }
         }
-        if (lineaTrim.startsWith("{")) {
-          if (!lineaTrim.endsWith("}")) {
-            salida.printf("Error 008. Línea %04d. Falta el segundo corchete, no usar comentarios de doble línea %n", numeroLinea);
-          }
-        } else if (lineaTrim.startsWith("}")) {
-          salida.printf("Error 009. Línea %04d. Ese corchete es invalido debe empezar con '{'%n", numeroLinea);
+        if(lineaTrim.contains("{") || lineaTrim.contains("}")){
+        if (!lineaTrim.matches("\\{.*\\}")) {
+            salida.printf("Error 008. Línea %04d. Los corchetes deben ir asi: '{'+cualquier contenido+'}' %n", numeroLinea);
+        }
         }
         //Validar que no haya contenido después del punto y coma
         if (lineaTrim.contains(";")) {

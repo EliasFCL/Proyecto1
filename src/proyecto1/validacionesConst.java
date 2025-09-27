@@ -11,7 +11,7 @@ public class validacionesConst {
   public static void validarConst(String lineaTrim, int numeroLinea, PrintWriter salida, Set < String > constantes) {
     try {
       String declaracion = lineaTrim.substring(5).trim(); //Quitar la palabra 'const'
-
+      
       //Verificar si se tiene un ":" o "="
       if (!declaracion.contains(":") && !declaracion.contains("=")) {
         salida.printf("Error 033. Línea %04d. Después del nombre de la constante debe haber ':' o '='%n", numeroLinea);
@@ -23,6 +23,9 @@ public class validacionesConst {
         } else {
           nombreConstante = declaracion.split("=")[0].trim();
         }
+        if (nombreConstante.isEmpty()) {
+          salida.printf("Error 037. Línea %04d. El nombre de la constante no puede ser nulo%n", numeroLinea);
+        }
         constantes.add(nombreConstante);//Añadir la constante a la lista
 
         //Validaciones del identificador
@@ -32,10 +35,6 @@ public class validacionesConst {
           salida.printf("Error 035. Línea %04d. El identificador '%s' es inválido. Usar solo letras y guiones bajos.%n", numeroLinea, nombreConstante);
         } else if (metodos.tipos.Reservada(nombreConstante) == true) {
           salida.printf("Error 036. Línea %04d. Se está usando una palabra reservada para la constante.%n", numeroLinea, nombreConstante);
-        }
-
-        if (nombreConstante.isEmpty()) {
-          salida.printf("Error 037. Línea %04d. El nombre de la constante no puede ser nulo%n", numeroLinea);
         }
 
         //Validar "of integer" u "of string"

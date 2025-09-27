@@ -19,8 +19,12 @@ public class validacionesVar {
     try {
       //Obtener identificador (lo que está antes de los 2 puntos)
       String identificador = declaracion.split(":")[0].trim(); //El identificador sera lo que esta antes de ":"
+      
+      if (identificador.isEmpty()) {
+          salida.printf("Error 037. Línea %04d. El nombre de la constante no puede ser nulo%n", numeroLinea);
+        }
       identificadores.add(identificador);//Se añade el identificador a la lista
-
+      
       //Verificar que la declaracion contenga los 2 puntos y los espacios
       if (lineaTrim.contains(":")) {
         String espacioDespues = lineaTrim.substring(lineaTrim.indexOf(":") + 1);
@@ -44,10 +48,6 @@ public class validacionesVar {
           salida.printf("Error 036. Línea %04d. Se está usando una palabra reservada para la variable.%n", numeroLinea, identificador);
         }
 
-        if (identificador.isEmpty()) {
-          salida.printf("Error 037. Línea %04d. El nombre de la constante no puede ser nulo%n", numeroLinea);
-        }
-
       //Comprobar lo que está después de los 2 puntos
       String tipoVar = lineaTrim.substring(lineaTrim.indexOf(":") + 1).trim();
       if (lineaTrim.contains(":")) {
@@ -60,7 +60,7 @@ public class validacionesVar {
         }
 
         //Validar que el tipo sea integer, string o word
-        if (!(tipoVar.equals("integer") || tipoVar.equals("string") || tipoVar.equals("word"))) {
+        if (!((tipoVar.equals("integer")) || tipoVar.equals("string") || tipoVar.equals("word") || tipoVar.matches("\\b(array)\\b\\s*\\[\\d+\\.\\.+\\d+\\]\\s+of\\s+\\b(integer)\\b"))) {
           salida.printf("Error 028. Línea %04d. Tipo de variable inválido: %s%n", numeroLinea, tipoVar);
         }
       }

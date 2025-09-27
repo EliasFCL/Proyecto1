@@ -52,6 +52,7 @@ public class validacionesWrite {
         if (contenidoToken.matches("('.*'|#\\d+|'[^']*'#\\d+|#\\d+'.*')")) continue;
         if (contenidoToken.matches("((#\\d+)|('.*?'))+")) continue;
         if (constantes.contains(contenidoToken)) continue;
+        if (contenidoToken.matches("\\'.*\\'")) continue;
         
         //Variables dentro corchetes
         String corchete = contenidoToken;

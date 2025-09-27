@@ -33,7 +33,7 @@ public class validacionesIniciales {
         }
       }
     } catch (Exception e) {
-      salida.printf("Error inesperado en validación de 'var' en la línea %04d: %s%n", numeroLinea, e.getMessage());
+      salida.printf("Error inesperado en validación de 'program' en la línea %04d: %s%n", numeroLinea, e.getMessage());
     }
   }
 
@@ -58,7 +58,7 @@ public class validacionesIniciales {
         }
       }
     } catch (Exception e) {
-      salida.printf("Error inesperado en validación de 'var' en la línea %04d: %s%n", numeroLinea, e.getMessage());
+      salida.printf("Error inesperado en validación de 'uses' en la línea %04d: %s%n", numeroLinea, e.getMessage());
     }
   }
 
