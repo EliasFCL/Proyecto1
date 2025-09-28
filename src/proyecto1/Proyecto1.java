@@ -1,7 +1,6 @@
 //Leer desde el cmd: https://www.delftstack.com/howto/java/args-java/?utm
 //Crear un archivo con mismo contenido: https://www.tutorialspoint.com/java/java_files_io.htm
 //Uso de printf: https://www.it.uc3m.es/pbasanta/asng/course_notes/input_output_printf_es.html
-//Determinar cuando se cierra una comilla simple: https://es.stackoverflow.com/questions/137583/determinar-cuantas-vocales-tiene-una-cadena-en-java
 //Tokens: https://stackoverflow.com/questions/1757065/java-splitting-a-comma-separated-string-but-ignoring-commas-in-quotes y https://stackoverflow.com/questions/1757065/java-splitting-a-comma-separated-string-but-ignoring-commas-in-quotes
 package proyecto1;
 
@@ -11,19 +10,19 @@ import java.util.*;
 public class Proyecto1 {
   public static void main(String[] args) {
 
-    //Verificar en el cmd que se este ingresando el nombre del archivo
+    //Verificar que en el cmd se este ingresando el nombre del archivo
     if (args.length == 0) {
       System.out.println("Por favor indique el nombre del archivo con la extensión .pas");
       return;
     }
 
-    String entradaCMD = args[0]; //Obtener el archivo .pas
-    String Archivo = entradaCMD.replace(".pas", ""); //Reemplazar el .pas para solo tener el nombre del archivo
+    String entradaCMD = args[0];//Obtener el archivo .pas
+    String Archivo = entradaCMD.replace(".pas", "");//Reemplazar el .pas para solo tener el nombre del archivo
     String archivoErrores = Archivo + "-errores.err";
 
     try (
-      BufferedReader entrada = new BufferedReader(new FileReader(entradaCMD)); //Leer el archivo indicado en el cmd
-      PrintWriter salida = new PrintWriter(new FileWriter(archivoErrores)) //Crear el archivo de errores
+      BufferedReader entrada = new BufferedReader(new FileReader(entradaCMD));//Leer el archivo indicado en el cmd
+      PrintWriter salida = new PrintWriter(new FileWriter(archivoErrores))//Crear el archivo de errores
     ) {
       //Variables de control
       String linea;
@@ -35,13 +34,13 @@ public class Proyecto1 {
       boolean varEncontrado = false;
       boolean beginEncontrado = false;
       boolean esperandoCierre = false;
-      Set < String > identificadores = new HashSet < > (); //Lista par añadir los identificadores
-      Set < String > constantes = new HashSet < > (); //Lista para añadir las constantes
+      Set < String > identificadores = new HashSet < > ();//Lista par añadir los identificadores
+      Set < String > constantes = new HashSet < > ();//Lista para añadir las constantes
 
       //Mientras hallan líneas para leer
       while ((linea = entrada.readLine()) != null) {
-        String lineaTrim = linea.trim(); //Eliminar espacios sobrantes y convertir a minúscula 
-        salida.printf("%04d %s%n", numeroLinea, linea); //Imprimir las líneas junto con su número de línea
+        String lineaTrim = linea.trim();//Eliminar espacios sobrantes
+        salida.printf("%04d %s%n", numeroLinea, linea);//Imprimir las líneas junto con su número de línea
 
         //Validaciones iniciales
         if (!programOriginal) {
@@ -57,11 +56,11 @@ public class Proyecto1 {
 
         //validar los const
         if (lineaTrim.startsWith("uses")) {
-          constCorrecto = true; //Se permiten const
+          constCorrecto = true;//Se permiten const
         }
 
         if (lineaTrim.startsWith("var")) {
-          constCorrecto = false; //ya no se permiten const
+          constCorrecto = false;//ya no se permiten const
         }
         
         if (lineaTrim.startsWith("const")) {
@@ -69,9 +68,9 @@ public class Proyecto1 {
           //Si todavía se esta esperando un cierre del const
           if (esperandoCierre) {
             salida.printf("Error 001. Línea %04d. El 'const' anterior no contiene un ';'%n", numeroLinea - 1);
-            esperandoCierre = false; // se resetea para no encadenar más errores
+            esperandoCierre = false;//Se resetea para no encadenar más errores
           }
-
+ 
           if (!constCorrecto) {
             salida.printf("Error 002. Línea %04d. 'const' debe estar entre uses y var%n", numeroLinea);
           }
@@ -95,7 +94,7 @@ public class Proyecto1 {
         //Validaciones del var
         if (lineaTrim.startsWith("var")) {
           validacionesVar.validarVar(lineaTrim, numeroLinea, salida, esperandoUses, beginEncontrado, constEncontrado, identificadores);
-          varEncontrado = true; //Marcar que ya se encontraron declaraciones var
+          varEncontrado = true;//Marcar que ya se encontraron declaraciones var
         }
 
         //Validaciones del begin
@@ -155,7 +154,7 @@ public class Proyecto1 {
             salida.printf("Error 010. Línea %04d. No puede haber ningun tipo de contenido después del ';'%n", numeroLinea);
           }
         }
-        numeroLinea++; //Aumentar el número de líneas
+        numeroLinea++;//Aumentar el número de líneas
       }
 
       System.out.println("Archivo de errores creado: " + archivoErrores);

@@ -15,7 +15,7 @@ public class validacionesEnd {
           if (lineaTrim.contains("//") || lineaTrim.contains("{")) {
             salida.printf("Error 030. Línea %04d. No se permiten comentarios en la línea de 'end.'%n", numeroLinea);
           }
-          // Verificar que no haya líneas con contenido después del end.
+          //Verificar que no haya líneas con contenido después del end.
           String siguienteLinea = entrada.readLine();
           if (siguienteLinea.trim() != null) {
             salida.printf("Error 031. Línea %04d. No puede haber líneas después de 'end.'%n", numeroLinea);

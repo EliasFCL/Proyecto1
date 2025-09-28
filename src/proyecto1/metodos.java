@@ -20,16 +20,16 @@ public class metodos {
     public static boolean Reservada(String identificador) {
       //Crear un Pattern a partir de reservadas
       Pattern pattern = Pattern.compile(reservadas.patron);
-      //Verificar si coincidencias con las reservadas
+      //Verificar si hay coincidencias con las reservadas
       Matcher matcher = pattern.matcher(identificador.toUpperCase());
-      return matcher.matches(); //Devuelve true si es una palabra reservada
+      return matcher.matches();//Devolver true si es una palabra reservada
     }
   };
 
   public static void validarCorchetes(String token, int numeroLinea, Set < String > identificadores, PrintWriter salida) {
     //Si la línea contiene ambos corchetes
     if (token.contains("[") && token.contains("]")) {
-      //Extraer lo que esta despues de '[' y antes de ']'
+      //Extraer lo que esta entre los corchetes
       String dentro = token.substring(token.indexOf("[") + 1, token.indexOf("]")).trim();
       dentro = dentro.replace(";", "").trim();//Eliminar punto y coma si lo hay
 

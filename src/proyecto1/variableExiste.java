@@ -42,14 +42,15 @@ public class variableExiste {
       for (String token: tokens) {
         token = token.trim();
         if (token.isEmpty() || metodos.tipos.Reservada(token) || token.matches("\\d+|\\d+;|;")) {
-          continue; //Ignorar números, vacíos o palabras reservadas
+          continue;//Ignorar números, vacíos o palabras reservadas
         }
+        
         //Validar lo que esta antes del corchete
-        String antes = token.split("\\[")[0].trim(); //Extraer lo que esta antes del corchete
+        String antes = token.split("\\[")[0].trim();//Extraer lo que esta antes del corchete
         if (antes.isEmpty()) {
           salida.printf("Error 050. Línea %04d. Debe haber una variables antes de '['%n", numeroLinea, antes);
         } else if (!identificadores.contains(antes) && !constantes.contains(antes)) {
-          salida.printf("Error 051. Línea %04d. La variable '%s' no está declarada%n", numeroLinea, antes);
+          salida.printf("Error 051. Línea %04d. La variable o constante '%s' no está declarada%n", numeroLinea, antes);
         }
         //Validar contenido dentro de corchetes
         metodos.validarCorchetes(token, numeroLinea, identificadores, salida);
@@ -68,7 +69,7 @@ public class variableExiste {
     } else {
       String contenido = lineaTrim.substring(inicial + 1, fin).trim(); //Extraer lo ques esta entre paréntesis
       String[] parametros = contenido.split(",");
-      //Recorrer parametros entre los parentésis
+      //Recorrer variables entre los parentésis
       for (String parametro: parametros) {
         String variable = parametro.trim();
         boolean encontrado = false;
@@ -79,7 +80,6 @@ public class variableExiste {
             break;
           }
         }
-
         if (!encontrado) {
           salida.printf("Error 055. Línea %04d. La variable '%s' no está declarada%n", numeroLinea, variable);
         }
@@ -89,7 +89,6 @@ public class variableExiste {
 
   //Validacion del if
   public static void validarIf(String lineaTrim, int numeroLinea, Set < String > identificadores, PrintWriter salida) {
-
     String declaracion = lineaTrim.substring(2).trim(); //Quitar el if
 
     //Separar por operadores, espacios o paréntesis
@@ -98,7 +97,7 @@ public class variableExiste {
     for (String token: tokens) {
       token = token.trim();
       if (token.isEmpty() || metodos.tipos.Reservada(token) || token.matches("\\d+")) {
-        continue; //Ignorar números, vacíos o palabras reservadas
+        continue;//Ignorar números, vacíos o palabras reservadas
       }
 
       //Validar lo que esta antes del corchete

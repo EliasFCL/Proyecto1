@@ -9,7 +9,6 @@ public class validacionesIniciales {
 
   public static void validarProgram(String lineaTrim, int numeroLinea, String Archivo, PrintWriter salida, boolean programOriginal) {
     try {
-      if (!programOriginal) {
         //Verificar que no haya contenido antes de program
         if (lineaTrim.isEmpty() || lineaTrim.startsWith("//") || lineaTrim.startsWith("{")) {
           salida.printf("Error 011. Línea %04d. No pueden haber líneas con o sin contenido antes de 'program'%n", numeroLinea);
@@ -31,7 +30,6 @@ public class validacionesIniciales {
           salida.printf("Error 014. Línea %04d. El nombre '%s' no coincide con el archivo '%s'%n",
             numeroLinea, nombrePas, Archivo);
         }
-      }
     } catch (Exception e) {
       salida.printf("Error inesperado en validación de 'program' en la línea %04d: %s%n", numeroLinea, e.getMessage());
     }

@@ -14,7 +14,7 @@ public class validacionesVar {
       salida.printf("Error 020. Línea %04d. 'var' debe aparecer después de 'const' y antes de 'begin'%n", numeroLinea);
     }
 
-    String declaracion = lineaTrim.substring(3).trim(); //Quitar "var"
+    String declaracion = lineaTrim.substring(3).trim();//Quitar "var"
 
     try {
       //Obtener identificador (lo que está antes de los 2 puntos)
